@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GraphNode, GraphEdge } from '../types';
-import { Network, Server, Globe, Mail, Link2, ShieldAlert, Cpu, ZoomIn, ZoomOut, RefreshCw } from 'lucide-react';
+import { Network, Server, Globe, Mail, Link2, ShieldAlert, Cpu } from 'lucide-react';
 
 interface EntityGraphProps {
   nodes: GraphNode[];
@@ -32,42 +32,42 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
   };
 
   const getNodeStyle = (risk: string, isSelected: boolean) => {
-    let base = 'bg-surface border-white/[0.08] text-text-primary';
-    let badge = 'bg-white/5 text-text-muted border-white/10';
+    let base = 'bg-surface border-border text-text-primary hover:border-slate-300';
+    let badge = 'bg-slate-100 text-slate-700 border-slate-200';
 
     if (risk === 'critical') {
-      base = 'bg-rose-500/[0.08] border-rose-500/40 text-rose-400';
-      badge = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
+      base = 'bg-red-50/40 border-red-200 text-red-900';
+      badge = 'bg-red-100 text-red-700 border-red-200';
     } else if (risk === 'high') {
-      base = 'bg-rose-500/[0.05] border-rose-500/30 text-rose-300';
-      badge = 'bg-rose-500/15 text-rose-300 border-rose-500/20';
+      base = 'bg-red-50/20 border-red-200 text-red-800';
+      badge = 'bg-red-50 text-red-700 border-red-200';
     } else if (risk === 'medium') {
-      base = 'bg-amber-500/[0.06] border-amber-500/30 text-amber-300';
-      badge = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+      base = 'bg-amber-50/30 border-amber-200 text-amber-800';
+      badge = 'bg-amber-100 text-amber-800 border-amber-200';
     } else {
-      base = 'bg-cyan-500/[0.05] border-cyan-500/30 text-cyan-300';
-      badge = 'bg-cyan-500/15 text-cyan-300 border-cyan-500/20';
+      base = 'bg-blue-50/30 border-blue-200 text-blue-800';
+      badge = 'bg-blue-100 text-blue-800 border-blue-200';
     }
 
     if (isSelected) {
-      base += ' ring-2 ring-cyan-400 shadow-[0_0_20px_rgba(0,166,198,0.25)]';
+      base += ' ring-2 ring-primary border-primary shadow-sm';
     }
 
     return { base, badge };
   };
 
   return (
-    <div className="bg-surface border border-white/[0.08] rounded-xl p-5 shadow-card space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
+    <div className="bg-surface border border-border rounded-xl p-5 shadow-card space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
         <div>
           <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-            <Network className="w-4 h-4 text-cyan-400" />
+            <Network className="w-4 h-4 text-primary" />
             <span>Infrastructure & Campaign Threat Correlation Network</span>
           </h3>
           {summary && <p className="text-xs text-text-secondary mt-1">{summary}</p>}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono text-cyan-400 px-2.5 py-1 rounded bg-cyan-500/10 border border-cyan-500/20">
+          <span className="text-[11px] font-mono text-primary font-semibold px-2.5 py-1 rounded-md bg-primary-subtle border border-primary-border">
             {nodes.length} NODES · {edges.length} EDGES
           </span>
         </div>
@@ -75,7 +75,7 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Nodes Grid Canvas */}
-        <div className="lg:col-span-2 bg-background-secondary p-4 rounded-xl border border-white/[0.06] space-y-3">
+        <div className="lg:col-span-2 bg-background-subtle p-4 rounded-xl border border-border space-y-3.5">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {nodes.map((node) => {
               const Icon = getNodeIcon(node.type);
@@ -86,15 +86,15 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
                 <div
                   key={node.id}
                   onClick={() => setSelectedNode(node)}
-                  className={`p-3.5 rounded-lg border cursor-pointer transition-all duration-200 hover:scale-[1.02] flex flex-col justify-between space-y-2 ${base}`}
+                  className={`p-4 rounded-xl border cursor-pointer transition-all duration-150 flex flex-col justify-between space-y-2.5 ${base}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5">
-                      <div className="p-1.5 rounded-md bg-background border border-white/10">
-                        <Icon className="w-4 h-4" />
+                      <div className="p-2 rounded-lg bg-surface border border-border shadow-xs">
+                        <Icon className="w-4 h-4 text-text-primary" />
                       </div>
                       <div>
-                        <span className="text-[9px] font-mono uppercase font-bold tracking-wider opacity-70 block">
+                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-text-muted block">
                           {node.type}
                         </span>
                         <span className="font-mono text-xs font-bold text-text-primary line-clamp-1">
@@ -102,7 +102,7 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
                         </span>
                       </div>
                     </div>
-                    <span className={`text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.2 rounded border ${badge}`}>
+                    <span className={`text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${badge}`}>
                       {node.risk}
                     </span>
                   </div>
@@ -112,7 +112,7 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
           </div>
 
           {/* Links visualization */}
-          <div className="space-y-1.5 pt-3 border-t border-white/[0.06]">
+          <div className="space-y-1.5 pt-3 border-t border-border">
             <h5 className="text-[10px] font-mono font-bold uppercase text-text-muted tracking-wider">
               Discovered Correlation Edges
             </h5>
@@ -120,9 +120,9 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
               {edges.map((edge, idx) => (
                 <div
                   key={idx}
-                  className="text-[10px] bg-surface-elevated border border-white/[0.06] px-2.5 py-1 rounded text-text-secondary font-mono flex items-center gap-1.5"
+                  className="text-[11px] bg-surface border border-border px-2.5 py-1 rounded-md text-text-secondary font-mono flex items-center gap-1.5 shadow-xs"
                 >
-                  <span className="font-bold text-cyan-400">{edge.source}</span>
+                  <span className="font-bold text-primary">{edge.source}</span>
                   <span className="text-text-muted">--[{edge.label || edge.relation}]--&gt;</span>
                   <span className="font-bold text-text-primary">{edge.target}</span>
                 </div>
@@ -132,8 +132,8 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
         </div>
 
         {/* Selected Entity Inspector Panel */}
-        <div className="bg-surface-elevated p-4 rounded-xl border border-white/[0.06] space-y-3">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary border-b border-white/[0.06] pb-2">
+        <div className="bg-surface p-4.5 rounded-xl border border-border shadow-xs space-y-3.5">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary border-b border-border pb-2.5">
             Entity Intelligence Inspector
           </h4>
 
@@ -141,28 +141,28 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
             <div className="space-y-3 text-xs">
               <div className="space-y-1">
                 <span className="text-[10px] font-mono uppercase text-text-muted">Entity Identifier</span>
-                <div className="font-mono font-bold text-text-primary break-all bg-background p-2 rounded border border-white/[0.06]">
+                <div className="font-mono font-bold text-text-primary break-all bg-background-subtle p-2.5 rounded-lg border border-border">
                   {selectedNode.label}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2 rounded bg-background border border-white/[0.06]">
+                <div className="p-2.5 rounded-lg bg-background-subtle border border-border">
                   <span className="text-[10px] text-text-muted font-sans block">Type</span>
-                  <span className="text-cyan-400 font-bold uppercase">{selectedNode.type}</span>
+                  <span className="text-primary font-bold uppercase">{selectedNode.type}</span>
                 </div>
-                <div className="p-2 rounded bg-background border border-white/[0.06]">
-                  <span className="text-[10px] text-text-muted font-sans block">Risk Rating</span>
-                  <span className={`font-bold uppercase ${selectedNode.risk === 'critical' ? 'text-rose-400' : 'text-amber-400'}`}>
+                <div className="p-2.5 rounded-lg bg-background-subtle border border-border">
+                  <span className="text-[10px] text-text-muted font-sans block">Risk Level</span>
+                  <span className={`font-bold uppercase ${selectedNode.risk === 'critical' ? 'text-red-700' : 'text-amber-700'}`}>
                     {selectedNode.risk}
                   </span>
                 </div>
               </div>
 
               {selectedNode.metadata && Object.keys(selectedNode.metadata).length > 0 && (
-                <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
+                <div className="space-y-1.5 pt-2 border-t border-border">
                   <span className="text-[10px] font-mono uppercase text-text-muted">Extracted Metadata</span>
-                  <div className="space-y-1 font-mono text-[11px] bg-background p-2.5 rounded border border-white/[0.06]">
+                  <div className="space-y-1.5 font-mono text-[11px] bg-background-subtle p-3 rounded-lg border border-border">
                     {Object.entries(selectedNode.metadata).map(([k, v]) => (
                       <div key={k} className="flex justify-between">
                         <span className="text-text-muted">{k}:</span>
@@ -175,7 +175,7 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
             </div>
           ) : (
             <div className="text-xs text-text-muted text-center py-8">
-              Click any node in the correlation canvas to inspect threat signals.
+              Click any node in the correlation network to inspect threat telemetry.
             </div>
           )}
         </div>

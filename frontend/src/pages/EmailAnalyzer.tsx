@@ -12,13 +12,10 @@ import {
   FileText,
   AlertTriangle,
   Link2,
-  Shield,
   CheckCircle2,
   Briefcase,
   Sparkles,
-  Terminal,
-  ShieldAlert,
-  FileCheck,
+  Shield,
 } from 'lucide-react';
 
 export const EmailAnalyzer: React.FC = () => {
@@ -103,40 +100,40 @@ Corporate IT Security Helpdesk`;
   return (
     <div className="space-y-6 max-w-[1600px] mx-auto pb-16">
       {/* Header */}
-      <div className="border-b border-white/[0.06] pb-4">
-        <h2 className="text-xl font-bold text-text-primary tracking-tight flex items-center gap-2">
-          <Mail className="w-5 h-5 text-cyan-400" />
+      <div className="border-b border-border pb-6">
+        <h2 className="text-2xl font-bold text-text-primary tracking-tight flex items-center gap-2.5">
+          <Mail className="w-6 h-6 text-primary" />
           <span>Email Threat & Forensic Investigation Workspace</span>
         </h2>
-        <p className="text-xs text-text-secondary mt-0.5">
-          Multi-dimensional email forensic deconstruction: MIME parser, header spoofing analysis, SPF/DKIM/DMARC audit, and ML link assessment.
+        <p className="text-sm text-text-secondary mt-1 max-w-3xl leading-relaxed">
+          Multi-dimensional email forensic reconstruction, header spoofing analysis, SPF/DKIM/DMARC audit, and ML link assessment.
         </p>
       </div>
 
       {/* Input Workspace */}
-      <div className="bg-surface border border-white/[0.08] rounded-xl p-5 shadow-card space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
+      <div className="bg-surface border border-border rounded-xl p-6 shadow-card space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3.5">
           <div className="flex items-center gap-2 text-xs font-semibold">
             <button
               onClick={() => setInputMode('text')}
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 ${
                 inputMode === 'text'
-                  ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
-                  : 'text-text-muted hover:text-text-primary bg-surface-elevated'
+                  ? 'bg-primary-subtle text-primary border border-primary-border font-bold'
+                  : 'text-text-secondary hover:text-text-primary bg-background-subtle'
               }`}
             >
-              <FileText className="w-3.5 h-3.5" />
+              <FileText className="w-4 h-4" />
               <span>Paste Raw Email / Headers</span>
             </button>
             <button
               onClick={() => setInputMode('file')}
-              className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-lg transition-colors flex items-center gap-2 ${
                 inputMode === 'file'
-                  ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
-                  : 'text-text-muted hover:text-text-primary bg-surface-elevated'
+                  ? 'bg-primary-subtle text-primary border border-primary-border font-bold'
+                  : 'text-text-secondary hover:text-text-primary bg-background-subtle'
               }`}
             >
-              <Upload className="w-3.5 h-3.5" />
+              <Upload className="w-4 h-4" />
               <span>Upload .EML File</span>
             </button>
           </div>
@@ -146,7 +143,7 @@ Corporate IT Security Helpdesk`;
               setInputMode('text');
               setRawText(samplePhishing);
             }}
-            className="text-xs text-cyan-400 font-semibold hover:underline flex items-center gap-1.5 font-mono"
+            className="text-xs text-primary font-semibold hover:underline flex items-center gap-1.5 font-mono"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Load Sample Phishing Attack</span>
@@ -160,22 +157,22 @@ Corporate IT Security Helpdesk`;
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
               placeholder="Paste raw email headers and body content here..."
-              className="w-full p-3 font-mono text-xs bg-background border border-white/[0.08] rounded-lg focus:outline-none focus:border-cyan-500/60 focus:ring-1 focus:ring-cyan-500/50 text-text-primary placeholder:text-text-muted"
+              className="w-full p-4 font-mono text-xs bg-surface border border-border rounded-xl focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-text-primary placeholder:text-text-muted leading-relaxed"
             />
           </div>
         ) : (
-          <div className="border-2 border-dashed border-white/[0.1] rounded-xl p-8 text-center bg-background/50 hover:bg-background transition-colors">
-            <Upload className="w-8 h-8 text-cyan-400 mx-auto mb-2 opacity-80" />
-            <p className="text-xs font-semibold text-text-primary">Drag and drop your .eml / RFC 822 file here</p>
-            <p className="text-[11px] text-text-muted mt-0.5">MIME multipart, headers, and attachments metadata extracted securely</p>
+          <div className="border-2 border-dashed border-border rounded-xl p-8 text-center bg-background-subtle/50 hover:bg-background-subtle transition-colors">
+            <Upload className="w-8 h-8 text-primary mx-auto mb-2 opacity-80" />
+            <p className="text-sm font-semibold text-text-primary">Drag and drop your .eml / RFC 822 file here</p>
+            <p className="text-xs text-text-muted mt-1">MIME multipart, headers, and attachments metadata extracted securely</p>
             <input
               type="file"
               accept=".eml,.msg,.txt"
               onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-              className="mt-3 text-xs file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500 file:text-background hover:file:bg-cyan-400 cursor-pointer font-mono"
+              className="mt-4 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-primary-hover cursor-pointer font-mono"
             />
             {selectedFile && (
-              <div className="mt-2 text-xs font-mono font-medium text-cyan-400">
+              <div className="mt-2.5 text-xs font-mono font-semibold text-primary">
                 Selected: {selectedFile.name} ({(selectedFile.size / 1024).toFixed(1)} KB)
               </div>
             )}
@@ -183,29 +180,29 @@ Corporate IT Security Helpdesk`;
         )}
 
         {error && (
-          <div className="p-3 bg-rose-500/[0.08] border border-rose-500/30 rounded-lg text-xs text-rose-400 flex items-center gap-2">
+          <div className="p-3.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2 font-medium">
             <AlertTriangle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <div className="flex justify-between items-center pt-2">
-          <span className="text-[11px] font-mono text-text-muted">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-2">
+          <span className="text-xs text-text-muted font-sans">
             PII Policy: Email message body is processed in memory and never stored in history.
           </span>
           <button
             onClick={handleScan}
             disabled={loading}
-            className="px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-background font-bold text-xs rounded-lg shadow-[0_0_20px_rgba(0,166,198,0.3)] transition-all flex items-center gap-2 disabled:opacity-50"
+            className="w-full sm:w-auto px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-semibold text-xs rounded-lg shadow-button transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {loading ? (
               <>
-                <div className="w-3.5 h-3.5 border-2 border-background border-t-transparent rounded-full animate-spin" />
+                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 <span>Deconstructing & Running ML...</span>
               </>
             ) : (
               <>
-                <Terminal className="w-4 h-4" />
+                <Shield className="w-4 h-4" />
                 <span>Execute Complete Forensic Scan</span>
               </>
             )}
@@ -215,10 +212,10 @@ Corporate IT Security Helpdesk`;
 
       {/* Forensic Results Panel */}
       {result && (
-        <div className="space-y-6 animate-in fade-in duration-300">
+        <div className="space-y-6 animate-in fade-in duration-200">
           {/* Executive Verdict & Risk Banner */}
-          <div className="bg-surface border border-white/[0.08] rounded-xl p-5 shadow-card space-y-4">
-            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-white/[0.06] pb-4">
+          <div className="bg-surface border border-border rounded-xl p-6 shadow-card space-y-4">
+            <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <VerdictBadge verdict={result.verdict} size="lg" />
@@ -227,12 +224,12 @@ Corporate IT Security Helpdesk`;
                   </span>
                   <span className="text-xs font-mono text-text-muted">ID: {result.scan_id}</span>
                 </div>
-                <h3 className="text-base font-bold text-text-primary">
+                <h3 className="text-lg font-bold text-text-primary">
                   {result.subject || '(No Subject Provided)'}
                 </h3>
                 <div className="text-xs font-mono text-text-secondary flex flex-wrap gap-x-5 gap-y-1">
                   <span>From: <strong className="text-text-primary">{result.sender || 'Unknown'}</strong></span>
-                  {result.reply_to && <span>Reply-To: <strong className="text-rose-400">{result.reply_to}</strong></span>}
+                  {result.reply_to && <span>Reply-To: <strong className="text-red-600">{result.reply_to}</strong></span>}
                 </div>
               </div>
 
@@ -240,10 +237,10 @@ Corporate IT Security Helpdesk`;
                 <button
                   onClick={handleCreateCase}
                   disabled={caseCreated}
-                  className={`px-3.5 py-2 rounded-lg text-xs font-mono font-semibold transition-all flex items-center gap-1.5 ${
+                  className={`px-4 py-2 rounded-lg text-xs font-mono font-semibold transition-colors flex items-center gap-1.5 ${
                     caseCreated
-                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                      : 'bg-surface-elevated hover:bg-surface-hover text-text-primary border border-white/[0.08]'
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-surface hover:bg-background-subtle text-text-primary border border-border'
                   }`}
                 >
                   {caseCreated ? <CheckCircle2 className="w-4 h-4" /> : <Briefcase className="w-4 h-4" />}
@@ -257,18 +254,18 @@ Corporate IT Security Helpdesk`;
 
           {/* Suspicious Flags Callout */}
           {result.suspicious_flags.length > 0 && (
-            <div className="bg-surface border border-rose-500/20 rounded-xl p-4.5 shadow-card space-y-2">
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4 text-rose-400" />
+            <div className="bg-surface border border-red-200 rounded-xl p-5 shadow-card space-y-2.5">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-red-700 flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-red-600" />
                 <span>Forensic Anomalies & Attack Signals ({result.suspicious_flags.length})</span>
               </h4>
               <div className="flex flex-wrap gap-2 pt-1">
                 {result.suspicious_flags.map((flag, idx) => (
                   <span
                     key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-rose-500/10 text-rose-300 text-xs font-mono border border-rose-500/20"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-red-50 text-red-700 text-xs font-mono border border-red-200 font-medium"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
                     <span>{flag}</span>
                   </span>
                 ))}
@@ -283,21 +280,21 @@ Corporate IT Security Helpdesk`;
           <NlpSignalsCard signals={result.nlp_signals} />
 
           {/* Extracted Embedded URLs ML Scan */}
-          <div className="bg-surface border border-white/[0.08] rounded-xl shadow-card overflow-hidden">
-            <div className="p-4 border-b border-white/[0.06] bg-surface-elevated/40 flex items-center justify-between">
+          <div className="bg-surface border border-border rounded-xl shadow-card overflow-hidden">
+            <div className="p-4 border-b border-border bg-surface-muted flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Link2 className="w-4 h-4 text-cyan-400" />
-                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary">
+                <Link2 className="w-4 h-4 text-primary" />
+                <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary">
                   Embedded URLs ({result.url_results.length}) — ML Assessment
                 </h4>
               </div>
-              <span className="text-[10px] text-text-muted font-mono">44 Feature Extraction Vector</span>
+              <span className="text-[11px] text-text-muted font-mono">44 Feature Extraction Vector</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono border-collapse">
                 <thead>
-                  <tr className="bg-surface-elevated border-b border-white/[0.06] text-[10px] font-bold uppercase text-text-muted tracking-wider">
+                  <tr className="bg-background-subtle border-b border-border text-[10px] font-bold uppercase text-text-muted tracking-wider">
                     <th className="py-2.5 px-4">#</th>
                     <th className="py-2.5 px-4">Target Link</th>
                     <th className="py-2.5 px-4">Verdict</th>
@@ -306,7 +303,7 @@ Corporate IT Security Helpdesk`;
                     <th className="py-2.5 px-4">Confidence</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/[0.04]">
+                <tbody className="divide-y divide-border/60">
                   {result.url_results.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="py-6 text-center text-text-muted font-mono">
@@ -315,7 +312,7 @@ Corporate IT Security Helpdesk`;
                     </tr>
                   ) : (
                     result.url_results.map((u, i) => (
-                      <tr key={i} className="hover:bg-surface-elevated/40 transition-colors">
+                      <tr key={i} className="hover:bg-background-subtle/50 transition-colors">
                         <td className="py-3 px-4 text-text-muted">{i + 1}</td>
                         <td className="py-3 px-4 text-text-primary max-w-[360px] truncate" title={u.url}>
                           {u.url}
@@ -324,7 +321,7 @@ Corporate IT Security Helpdesk`;
                           <VerdictBadge verdict={u.verdict} size="sm" />
                         </td>
                         <td className="py-3 px-4 font-bold">
-                          <span className={u.risk_score >= 65 ? 'text-rose-400' : u.risk_score >= 35 ? 'text-amber-400' : 'text-emerald-400'}>
+                          <span className={u.risk_score >= 65 ? 'text-red-600' : u.risk_score >= 35 ? 'text-amber-600' : 'text-emerald-600'}>
                             {u.risk_score}/100
                           </span>
                         </td>
@@ -339,7 +336,7 @@ Corporate IT Security Helpdesk`;
           </div>
 
           {/* SMTP Relay Hop Visualizer */}
-          <div className="bg-surface border border-white/[0.08] rounded-xl p-5 shadow-card">
+          <div className="bg-surface border border-border rounded-xl p-6 shadow-card">
             <RelayPathGraph hops={result.relay_path} />
           </div>
         </div>

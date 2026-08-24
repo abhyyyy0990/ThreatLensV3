@@ -8,19 +8,17 @@ import {
   Cpu,
   ArrowUpRight,
   Activity,
-  Terminal,
   ArrowRight,
   TrendingUp,
+  Shield,
   Radio,
-  Zap,
 } from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 interface DashboardProps {
   onNavigate: (page: string) => void;
 }
 
-// 24h Telemetry timeline mock dataset for visual graph
 const activityData = [
   { time: '00:00', total: 12, threats: 3 },
   { time: '04:00', total: 18, threats: 4 },
@@ -70,34 +68,34 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
   return (
     <div className="space-y-6 max-w-[1600px] mx-auto pb-16">
-      {/* Hero Section */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-white/[0.06] pb-5">
+      {/* Hero Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-border pb-6">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#00A6C6]" />
-            <span className="text-[11px] font-mono font-semibold tracking-wider text-cyan-400 uppercase">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            <span className="text-[11px] font-mono font-semibold tracking-wider text-primary uppercase">
               Operational Command Center
             </span>
           </div>
-          <h2 className="text-2xl font-bold text-text-primary tracking-tight">
+          <h2 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight">
             Threat Intelligence Command Center
           </h2>
-          <p className="text-xs text-text-secondary mt-1 max-w-2xl">
-            Real-time threat detection, forensic investigation, and ML-powered cyber security intelligence.
+          <p className="text-sm text-text-secondary mt-1 max-w-2xl leading-relaxed">
+            Real-time threat detection, forensic investigation, and ML-powered cybersecurity intelligence.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNavigate('email')}
-            className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-background font-bold text-xs rounded-lg shadow-[0_0_20px_rgba(0,166,198,0.3)] transition-all flex items-center gap-2"
+            className="px-4 py-2.5 bg-primary hover:bg-primary-hover text-white font-semibold text-xs rounded-lg shadow-button transition-colors flex items-center gap-2"
           >
-            <Terminal className="w-3.5 h-3.5" />
+            <Shield className="w-4 h-4" />
             <span>Analyze Threat</span>
           </button>
           <button
             onClick={() => onNavigate('url')}
-            className="px-4 py-2 bg-surface hover:bg-surface-elevated border border-white/[0.08] hover:border-cyan-500/30 text-text-primary font-semibold text-xs rounded-lg transition-all flex items-center gap-2"
+            className="px-4 py-2.5 bg-surface hover:bg-background-subtle border border-border text-text-primary font-semibold text-xs rounded-lg shadow-sm transition-colors flex items-center gap-2"
           >
             <span>Scan URL</span>
             <ArrowRight className="w-3.5 h-3.5 text-text-muted" />
@@ -105,15 +103,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Analyzed */}
-        <div className="bg-surface border border-white/[0.08] rounded-xl p-4.5 shadow-card hover:border-white/20 transition-all group">
+      {/* Clean KPI Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4.5">
+        {/* Card 1: Total Analyzed */}
+        <div className="bg-surface border border-border rounded-xl p-5 shadow-card hover:shadow-card-hover transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-text-muted">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-text-muted">
               Total Analyzed
             </span>
-            <div className="p-1.5 rounded-md bg-white/5 border border-white/10 text-cyan-400">
+            <div className="p-2 rounded-lg bg-background-subtle text-text-secondary">
               <Activity className="w-4 h-4" />
             </div>
           </div>
@@ -121,78 +119,75 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             <span className="text-3xl font-bold font-mono text-text-primary tracking-tight">
               {stats.total.toLocaleString()}
             </span>
-            <span className="text-xs text-text-muted font-mono">events</span>
+            <span className="text-xs text-text-muted font-sans font-medium">events</span>
           </div>
-          <div className="mt-3 pt-2.5 border-t border-white/[0.06] text-[11px] font-mono text-text-secondary flex justify-between">
+          <div className="mt-3 pt-3 border-t border-border text-xs font-mono text-text-secondary flex justify-between">
             <span>{stats.url_scans} URLs</span>
             <span>{stats.email_scans} Emails</span>
           </div>
         </div>
 
-        {/* Threats Intercepted */}
-        <div className="bg-surface border border-rose-500/20 rounded-xl p-4.5 shadow-card hover:border-rose-500/40 transition-all relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-500 to-transparent" />
+        {/* Card 2: Threats Intercepted */}
+        <div className="bg-surface border border-border rounded-xl p-5 shadow-card hover:shadow-card-hover transition-shadow relative">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-rose-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-red-600">
               Threats Intercepted
             </span>
-            <div className="p-1.5 rounded-md bg-rose-500/10 border border-rose-500/20 text-rose-400">
+            <div className="p-2 rounded-lg bg-red-50 text-red-600">
               <ShieldAlert className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-mono text-rose-400 tracking-tight">
+            <span className="text-3xl font-bold font-mono text-text-primary tracking-tight">
               {stats.malicious.toLocaleString()}
             </span>
-            <span className="text-xs font-mono text-rose-400/80">
+            <span className="text-xs font-semibold text-red-600">
               {stats.total > 0 ? `${((stats.malicious / stats.total) * 100).toFixed(0)}% attack rate` : '0%'}
             </span>
           </div>
-          <div className="mt-3 pt-2.5 border-t border-white/[0.06] text-[11px] text-text-muted truncate">
+          <div className="mt-3 pt-3 border-t border-border text-xs text-text-muted truncate">
             Phishing, credential theft & malware
           </div>
         </div>
 
-        {/* Verified Clean */}
-        <div className="bg-surface border border-emerald-500/20 rounded-xl p-4.5 shadow-card hover:border-emerald-500/40 transition-all relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 to-transparent" />
+        {/* Card 3: Verified Clean */}
+        <div className="bg-surface border border-border rounded-xl p-5 shadow-card hover:shadow-card-hover transition-shadow relative">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-emerald-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
               Verified Clean
             </span>
-            <div className="p-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <div className="p-2 rounded-lg bg-emerald-50 text-emerald-600">
               <CheckCircle className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-mono text-emerald-400 tracking-tight">
+            <span className="text-3xl font-bold font-mono text-text-primary tracking-tight">
               {stats.safe.toLocaleString()}
             </span>
-            <span className="text-xs font-mono text-emerald-400/80">safe vectors</span>
+            <span className="text-xs font-semibold text-emerald-600">safe vectors</span>
           </div>
-          <div className="mt-3 pt-2.5 border-t border-white/[0.06] text-[11px] text-text-muted truncate">
+          <div className="mt-3 pt-3 border-t border-border text-xs text-text-muted truncate">
             Passed ML & deterministic filters
           </div>
         </div>
 
-        {/* Model Confidence */}
-        <div className="bg-surface border border-cyan-500/20 rounded-xl p-4.5 shadow-card hover:border-cyan-500/40 transition-all relative overflow-hidden group">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500 to-transparent" />
+        {/* Card 4: Model Confidence */}
+        <div className="bg-surface border border-border rounded-xl p-5 shadow-card hover:shadow-card-hover transition-shadow relative">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-cyan-400">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
               Model Confidence (F1)
             </span>
-            <div className="p-1.5 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+            <div className="p-2 rounded-lg bg-primary-subtle text-primary">
               <Cpu className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-mono text-cyan-400 tracking-tight">
+            <span className="text-3xl font-bold font-mono text-primary tracking-tight">
               {modelInfo?.locked_test_metrics?.f1 ? modelInfo.locked_test_metrics.f1.toFixed(3) : '0.827'}
             </span>
-            <span className="text-xs font-mono text-text-muted">v001 RF</span>
+            <span className="text-xs font-mono text-text-muted font-medium">v001 RF</span>
           </div>
-          <div className="mt-3 pt-2.5 border-t border-white/[0.06] text-[11px] font-mono text-text-secondary flex justify-between">
+          <div className="mt-3 pt-3 border-t border-border text-xs font-mono text-text-secondary flex justify-between">
             <span>PR-AUC: {modelInfo?.locked_test_metrics?.pr_auc ? modelInfo.locked_test_metrics.pr_auc.toFixed(3) : '0.910'}</span>
             <span>Acc: {modelInfo?.locked_test_metrics?.accuracy ? (modelInfo.locked_test_metrics.accuracy * 100).toFixed(1) : '89.2'}%</span>
           </div>
@@ -200,55 +195,57 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       </div>
 
       {/* 24h Threat Activity Graph */}
-      <div className="bg-surface border border-white/[0.08] rounded-xl p-5 shadow-card space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.06] pb-3">
+      <div className="bg-surface border border-border rounded-xl p-5 shadow-card space-y-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-3">
           <div>
-            <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-text-primary flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-cyan-400" />
+            <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" />
               <span>24-Hour Threat Activity Telemetry</span>
             </h3>
-            <p className="text-[11px] text-text-muted mt-0.5">
+            <p className="text-xs text-text-secondary mt-0.5">
               Live ingress stream comparing total scans vs intercepted malicious payloads.
             </p>
           </div>
           <div className="flex items-center gap-4 text-xs font-mono">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-cyan-500" />
+              <span className="w-2.5 h-2.5 rounded-full bg-primary" />
               <span className="text-text-secondary">Total Scanned</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm bg-rose-500" />
-              <span className="text-rose-400 font-semibold">Malicious Intercepts</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+              <span className="text-red-600 font-semibold">Malicious Intercepts</span>
             </div>
           </div>
         </div>
 
-        <div className="h-48 w-full pt-2">
+        <div className="h-52 w-full pt-2">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="totalGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#00A6C6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#00A6C6" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#2563EB" stopOpacity={0.12} />
+                  <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0} />
                 </linearGradient>
                 <linearGradient id="threatGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#FF4D67" stopOpacity={0.4} />
-                  <stop offset="95%" stopColor="#FF4D67" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#EF4444" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="#EF4444" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="time" stroke="#5A677A" fontSize={10} tickLine={false} />
-              <YAxis stroke="#5A677A" fontSize={10} tickLine={false} />
+              <CartesianGrid stroke="#F1F5F9" vertical={false} />
+              <XAxis dataKey="time" stroke="#94A3B8" fontSize={11} tickLine={false} axisLine={{ stroke: '#E2E8F0' }} />
+              <YAxis stroke="#94A3B8" fontSize={11} tickLine={false} axisLine={{ stroke: '#E2E8F0' }} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: '#101722',
-                  borderColor: 'rgba(255,255,255,0.1)',
+                  backgroundColor: '#FFFFFF',
+                  borderColor: '#E2E8F0',
                   borderRadius: '8px',
-                  fontSize: '11px',
-                  fontFamily: 'JetBrains Mono',
+                  fontSize: '12px',
+                  boxShadow: '0 4px 6px -1px rgba(15, 23, 42, 0.08)',
+                  fontFamily: 'Inter, sans-serif',
                 }}
               />
-              <Area type="monotone" dataKey="total" stroke="#00A6C6" strokeWidth={2} fillOpacity={1} fill="url(#totalGradient)" />
-              <Area type="monotone" dataKey="threats" stroke="#FF4D67" strokeWidth={2} fillOpacity={1} fill="url(#threatGradient)" />
+              <Area type="monotone" dataKey="total" stroke="#2563EB" strokeWidth={2} fillOpacity={1} fill="url(#totalGradient)" />
+              <Area type="monotone" dataKey="threats" stroke="#EF4444" strokeWidth={2} fillOpacity={1} fill="url(#threatGradient)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -257,27 +254,27 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
       {/* Main Grid: Live Threat Feed + AI Engine Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Live Threat Feed */}
-        <div className="lg:col-span-2 bg-surface border border-white/[0.08] rounded-xl shadow-card overflow-hidden">
-          <div className="p-4 border-b border-white/[0.06] flex flex-wrap items-center justify-between gap-3 bg-surface-elevated/40">
+        <div className="lg:col-span-2 bg-surface border border-border rounded-xl shadow-card overflow-hidden">
+          <div className="p-4 border-b border-border flex flex-wrap items-center justify-between gap-3 bg-surface-muted">
             <div className="flex items-center gap-2">
-              <Radio className="w-4 h-4 text-rose-400 animate-pulse" />
+              <Radio className="w-4 h-4 text-primary" />
               <div>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-text-primary">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
                   Live Security Triage Stream
                 </h3>
-                <p className="text-[10px] text-text-muted">Telemetry events persisted in SQLite store</p>
+                <p className="text-[11px] text-text-muted">Telemetry events persisted in SQLite store</p>
               </div>
             </div>
 
-            <div className="flex rounded-md bg-background p-0.5 text-xs font-mono font-semibold">
+            <div className="flex rounded-lg bg-background-subtle p-0.5 text-xs font-semibold">
               {['all', 'email', 'url'].map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilterType(f)}
-                  className={`px-3 py-1 rounded text-[11px] uppercase transition-colors ${
+                  className={`px-3 py-1 rounded-md text-[11px] uppercase transition-colors ${
                     filterType === f
-                      ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30'
-                      : 'text-text-muted hover:text-text-primary'
+                      ? 'bg-surface text-primary font-bold shadow-xs'
+                      : 'text-text-secondary hover:text-text-primary'
                   }`}
                 >
                   {f}
@@ -286,7 +283,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          <div className="divide-y divide-white/[0.04] max-h-[500px] overflow-y-auto">
+          <div className="divide-y divide-border/60 max-h-[500px] overflow-y-auto">
             {filteredHistory.length === 0 ? (
               <div className="py-12 text-center text-text-muted text-xs font-mono">
                 No telemetry recorded yet. Submit an email or URL to start analysis.
@@ -299,19 +296,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                 return (
                   <div
                     key={item.id}
-                    className="p-3.5 hover:bg-surface-elevated/50 transition-colors flex items-center justify-between gap-4 font-mono text-xs"
+                    className="p-3.5 hover:bg-background-subtle/70 transition-colors flex items-center justify-between gap-4 font-mono text-xs"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={`w-2 h-2 rounded-full shrink-0 ${
                           isMalicious
-                            ? 'bg-rose-500 shadow-[0_0_8px_#FF4D67]'
+                            ? 'bg-red-500'
                             : isSuspicious
-                            ? 'bg-amber-400 shadow-[0_0_8px_#F5B942]'
-                            : 'bg-emerald-400 shadow-[0_0_8px_#35D07F]'
+                            ? 'bg-amber-500'
+                            : 'bg-emerald-500'
                         }`}
                       />
-                      <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-cyan-400">
+                      <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-mono">
                         {item.scan_type}
                       </span>
                       <span className="text-text-primary font-medium truncate max-w-[320px]" title={item.input_repr}>
@@ -322,12 +319,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
                     <div className="flex items-center gap-4 shrink-0">
                       <VerdictBadge verdict={item.verdict} size="sm" />
                       <div className="text-right">
-                        <span className={`font-bold ${isMalicious ? 'text-rose-400' : isSuspicious ? 'text-amber-400' : 'text-emerald-400'}`}>
+                        <span className={`font-bold ${isMalicious ? 'text-red-600' : isSuspicious ? 'text-amber-600' : 'text-emerald-600'}`}>
                           {item.risk_score}
                         </span>
                         <span className="text-text-muted text-[10px]">/100</span>
                       </div>
-                      <span className="text-[10px] text-text-muted hidden sm:inline">
+                      <span className="text-[11px] text-text-muted hidden sm:inline">
                         {item.scanned_at ? new Date(item.scanned_at).toLocaleTimeString() : 'Realtime'}
                       </span>
                     </div>
@@ -340,18 +337,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
         {/* Right Col: AI Engine Panel */}
         <div className="space-y-4">
-          <div className="bg-surface border border-white/[0.08] rounded-xl p-4.5 shadow-card space-y-4">
-            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+          <div className="bg-surface border border-border rounded-xl p-5 shadow-card space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
               <div>
-                <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-text-primary flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-cyan-400" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
+                  <Cpu className="w-4 h-4 text-primary" />
                   <span>Active AI Engine</span>
                 </h3>
-                <p className="text-[10px] text-text-muted">RandomForest v001</p>
+                <p className="text-[11px] text-text-muted">RandomForest v001</p>
               </div>
               <button
                 onClick={() => onNavigate('model')}
-                className="text-[11px] text-cyan-400 font-semibold hover:underline flex items-center gap-0.5"
+                className="text-[11px] text-primary font-semibold hover:underline flex items-center gap-0.5"
               >
                 <span>Metrics</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
@@ -359,19 +356,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
             </div>
 
             <div className="space-y-2 text-xs font-mono">
-              <div className="flex justify-between py-1 border-b border-white/[0.04]">
+              <div className="flex justify-between py-1.5 border-b border-border/60">
                 <span className="text-text-muted font-sans">Algorithm</span>
                 <span className="text-text-primary font-semibold">{modelInfo?.algorithm || 'RandomForest'}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/[0.04]">
+              <div className="flex justify-between py-1.5 border-b border-border/60">
                 <span className="text-text-muted font-sans">Calibration</span>
-                <span className="text-cyan-400 font-semibold">{modelInfo?.calibration_method || 'Isotonic'}</span>
+                <span className="text-primary font-semibold">{modelInfo?.calibration_method || 'Isotonic'}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/[0.04]">
+              <div className="flex justify-between py-1.5 border-b border-border/60">
                 <span className="text-text-muted font-sans">Decision Threshold</span>
-                <span className="font-bold text-cyan-400">{modelInfo?.selected_threshold || '0.390'}</span>
+                <span className="font-bold text-primary">{modelInfo?.selected_threshold || '0.390'}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-white/[0.04]">
+              <div className="flex justify-between py-1.5 border-b border-border/60">
                 <span className="text-text-muted font-sans">Features</span>
                 <span className="text-text-primary">{modelInfo?.feature_count || 44} numerical</span>
               </div>
@@ -379,19 +376,19 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
 
             {/* Model Performance Grid */}
             <div className="pt-2">
-              <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-text-muted mb-2">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-text-muted mb-2">
                 Locked Holdout Benchmarks
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2.5 rounded-lg bg-surface-elevated border border-white/[0.06]">
-                  <div className="text-[10px] text-text-muted font-sans">ROC-AUC</div>
-                  <div className="font-bold text-text-primary text-sm mt-0.5">
+                <div className="p-3 rounded-lg bg-background-subtle border border-border">
+                  <div className="text-[10px] text-text-muted font-sans font-medium">ROC-AUC</div>
+                  <div className="font-bold text-text-primary text-base mt-0.5">
                     {modelInfo?.locked_test_metrics?.roc_auc ? modelInfo.locked_test_metrics.roc_auc.toFixed(4) : '0.9417'}
                   </div>
                 </div>
-                <div className="p-2.5 rounded-lg bg-cyan-500/[0.05] border border-cyan-500/20">
-                  <div className="text-[10px] text-cyan-400 font-sans">PR-AUC (Primary)</div>
-                  <div className="font-bold text-cyan-400 text-sm mt-0.5">
+                <div className="p-3 rounded-lg bg-primary-subtle border border-primary-border">
+                  <div className="text-[10px] text-primary font-sans font-bold">PR-AUC (Primary)</div>
+                  <div className="font-bold text-primary text-base mt-0.5">
                     {modelInfo?.locked_test_metrics?.pr_auc ? modelInfo.locked_test_metrics.pr_auc.toFixed(4) : '0.9103'}
                   </div>
                 </div>
@@ -400,21 +397,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate }) => {
           </div>
 
           {/* Integrated Intelligence Feeds */}
-          <div className="bg-surface border border-white/[0.08] rounded-xl p-4.5 shadow-card space-y-2.5">
-            <h4 className="text-xs font-bold font-mono uppercase tracking-wider text-text-primary">
+          <div className="bg-surface border border-border rounded-xl p-5 shadow-card space-y-3">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary">
               Threat Intelligence Feeds
             </h4>
             <div className="space-y-2 text-xs font-mono">
-              <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-elevated border border-white/[0.06]">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-background-subtle border border-border">
                 <span className="text-text-primary font-medium">Google Safe Browsing v4</span>
-                <span className="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> ONLINE
+                <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> ONLINE
                 </span>
               </div>
-              <div className="flex items-center justify-between p-2.5 rounded-lg bg-surface-elevated border border-white/[0.06]">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-background-subtle border border-border">
                 <span className="text-text-primary font-medium">PhishTank Live XML</span>
-                <span className="text-[10px] font-bold text-emerald-400 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> ONLINE
+                <span className="text-[11px] font-bold text-emerald-700 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> ONLINE
                 </span>
               </div>
             </div>

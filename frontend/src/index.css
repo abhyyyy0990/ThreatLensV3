@@ -2,63 +2,48 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   html, body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    background-color: #070B12;
-    color: #F5F7FA;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    letter-spacing: -0.01em;
+    background-color: #F8FAFC;
+    color: #0F172A;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Custom dark cybersecurity scrollbars */
+/* Crisp subtle scrollbars for light theme */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #070B12;
+  background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: #CBD5E1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 166, 198, 0.4);
+  background: #94A3B8;
 }
 
-/* Pulse radar glow animation */
-@keyframes cyber-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.05); }
+/* Clean utility classes */
+.card-base {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
 }
 
-.animate-cyber-pulse {
-  animation: cyber-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Glassmorphism utility */
-.glass-panel {
-  background: rgba(16, 23, 34, 0.85);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.glass-panel-elevated {
-  background: rgba(21, 30, 43, 0.9);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-}
-
-.glow-cyan {
-  box-shadow: 0 0 25px -5px rgba(0, 166, 198, 0.3);
-}
-
-.glow-danger {
-  box-shadow: 0 0 25px -5px rgba(255, 77, 103, 0.3);
+.card-elevated {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
 }

@@ -8,50 +8,67 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#070B12",
-        "background-secondary": "#0B111B",
-        surface: "#101722",
-        "surface-elevated": "#151E2B",
-        "surface-card": "#101722",
-        "surface-hover": "#1A2536",
+        background: "#F8FAFC",
+        "background-subtle": "#F1F5F9",
+        surface: "#FFFFFF",
+        "surface-elevated": "#FFFFFF",
+        "surface-muted": "#F8FAFC",
+        "surface-hover": "#F1F5F9",
         
-        primary: "#00A6C6",
-        "primary-hover": "#00C2E8",
-        "primary-glow": "rgba(0, 166, 198, 0.15)",
+        primary: {
+          DEFAULT: "#2563EB",
+          hover: "#1D4ED8",
+          subtle: "#EFF6FF",
+          border: "#BFDBFE",
+        },
         
-        secondary: "#2B6954",
-        "secondary-hover": "#347D64",
+        danger: {
+          DEFAULT: "#EF4444",
+          hover: "#DC2626",
+          subtle: "#FEF2F2",
+          border: "#FECACA",
+          text: "#991B1B",
+        },
         
-        danger: "#FF4D67",
-        "danger-glow": "rgba(255, 77, 103, 0.15)",
+        warning: {
+          DEFAULT: "#F59E0B",
+          hover: "#D97706",
+          subtle: "#FFFBEB",
+          border: "#FDE68A",
+          text: "#92400E",
+        },
         
-        warning: "#F5B942",
-        "warning-glow": "rgba(245, 185, 66, 0.15)",
+        success: {
+          DEFAULT: "#10B981",
+          hover: "#059669",
+          subtle: "#ECFDF5",
+          border: "#A7F3D0",
+          text: "#065F46",
+        },
         
-        success: "#35D07F",
-        "success-glow": "rgba(53, 208, 127, 0.15)",
+        "text-primary": "#0F172A",
+        "text-secondary": "#475569",
+        "text-muted": "#94A3B8",
         
-        "text-primary": "#F5F7FA",
-        "text-secondary": "#8B98AA",
-        "text-muted": "#5A677A",
-        
-        border: "rgba(255, 255, 255, 0.08)",
-        "border-subtle": "rgba(255, 255, 255, 0.05)",
-        "border-accent": "rgba(0, 166, 198, 0.3)",
+        border: {
+          DEFAULT: "#E2E8F0",
+          subtle: "#F1F5F9",
+          strong: "#CBD5E1",
+        },
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
         mono: ["JetBrains Mono", "SFMono-Regular", "Menlo", "monospace"],
       },
       boxShadow: {
-        glow: "0 0 20px -5px rgba(0, 166, 198, 0.25)",
-        "glow-danger": "0 0 20px -5px rgba(255, 77, 103, 0.25)",
-        "glow-success": "0 0 20px -5px rgba(53, 208, 127, 0.25)",
-        card: "0 4px 20px -2px rgba(0, 0, 0, 0.5)",
+        card: "0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05)",
+        "card-hover": "0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.05)",
+        dropdown: "0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04)",
+        button: "0 1px 2px 0 rgba(37, 99, 235, 0.2)",
       },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "cyber-grid": "linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)",
+      borderRadius: {
+        xl: "12px",
+        "2xl": "16px",
       },
     },
   },

@@ -70,14 +70,14 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-text-primary flex selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen bg-background text-text-primary flex selection:bg-primary-subtle selection:text-primary">
       {/* Sidebar Navigation */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Main Content Area */}
       <div className="flex-1 ml-[260px] flex flex-col min-h-screen">
         <Header title={getPageTitle()} />
-        <main className="flex-1 mt-13 p-7 bg-background bg-cyber-grid">
+        <main className="flex-1 mt-14 p-8 bg-background">
           {renderActivePage()}
         </main>
       </div>
