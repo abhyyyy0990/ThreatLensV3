@@ -1,0 +1,52 @@
+{
+  "prepared_at": "2026-08-20T05:53:40.038716+00:00",
+  "dataset_version": "v001",
+  "random_seed": 42,
+  "errors": [],
+  "n_raw": 651191,
+  "n_empty_url_dropped": 3,
+  "n_unknown_label_dropped": 0,
+  "class_distribution_raw": {
+    "benign": 428103,
+    "defacement": 96457,
+    "phishing": 94108,
+    "malware": 32520
+  },
+  "binary_distribution_raw": {
+    "0": 428103,
+    "1": 223085
+  },
+  "n_exact_duplicates_removed": 16239,
+  "n_unique_domains": 196510,
+  "split_sizes": {
+    "train": 428266,
+    "validation": 113001,
+    "test": 93682
+  },
+  "split_fractions": {
+    "train": 0.6745,
+    "validation": 0.178,
+    "test": 0.1475
+  },
+  "split_binary_distribution": {
+    "train": {
+      "0": 283793,
+      "1": 144473
+    },
+    "validation": {
+      "0": 81265,
+      "1": 31736
+    },
+    "test": {
+      "0": 62271,
+      "1": 31411
+    }
+  },
+  "leakage_check": {
+    "train_test_domain_overlap": 0,
+    "val_test_domain_overlap": 0,
+    "train_val_domain_overlap": 0,
+    "train_test_overlap_samples": 0,
+    "train_test_overlap_examples": []
+  }
+}

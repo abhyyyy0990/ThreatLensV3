@@ -1,0 +1,10 @@
+streamlit
+pandas
+numpy
+scikit-learn
+joblib
+requests
+python-dotenv
+pytest>=7.0
+tldextract
+xgboost

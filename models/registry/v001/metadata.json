@@ -1,0 +1,40 @@
+{
+  "model_name": "url_classifier_v001",
+  "version": "v001",
+  "dataset_version": "v001",
+  "feature_version": "v001",
+  "training_timestamp": "2026-08-20T06:08:30.455549+00:00",
+  "random_seed": 42,
+  "algorithm": "RandomForest",
+  "selected_threshold": 0.39,
+  "calibration_method": "isotonic",
+  "calibration_ece": {
+    "platt": 0.021027,
+    "isotonic": 0.0
+  },
+  "validation_metrics": {
+    "threshold": 0.39,
+    "accuracy": 0.899788,
+    "precision": 0.866095,
+    "recall": 0.760808,
+    "f1": 0.810045,
+    "roc_auc": 0.936436,
+    "pr_auc": 0.891999,
+    "specificity": 0.954064,
+    "fpr": 0.045936,
+    "fnr": 0.239192,
+    "tp": 24145,
+    "tn": 77532,
+    "fp": 3733,
+    "fn": 7591,
+    "n_samples": 113001,
+    "n_positive": 31736,
+    "n_negative": 81265
+  },
+  "threshold_selection_criterion": "f1",
+  "locked_test_metrics": "NOT_YET_EVALUATED \u2014 run scripts/evaluate.py",
+  "notes": "Trained on domain-grouped split. Locked test set has not been evaluated yet. Run evaluate.py to compute locked-test results.",
+  "artifact_checksum_sha256": "7d599aba7bd537f02574fb722125a798fa9d3d3f3909506e318334c4ffe72c39",
+  "registry_path": "models/registry/v001",
+  "saved_at": "2026-08-20T06:08:31.772885+00:00"
+}

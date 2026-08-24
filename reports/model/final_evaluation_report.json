@@ -1,0 +1,30 @@
+{
+  "evaluation_type": "locked_test_final",
+  "evaluated_at": "2026-08-20T06:08:49.569145+00:00",
+  "model_version": "v001",
+  "algorithm": "RandomForest",
+  "calibration_method": "isotonic",
+  "feature_version": "v001",
+  "dataset_version": "v001",
+  "selected_threshold": 0.39,
+  "locked_test_metrics": {
+    "threshold": 0.39,
+    "accuracy": 0.89189,
+    "precision": 0.894086,
+    "recall": 0.768616,
+    "f1": 0.826617,
+    "roc_auc": 0.941669,
+    "pr_auc": 0.910318,
+    "specificity": 0.954072,
+    "fpr": 0.045928,
+    "fnr": 0.231384,
+    "tp": 24143,
+    "tn": 59411,
+    "fp": 2860,
+    "fn": 7268,
+    "n_samples": 93682,
+    "n_positive": 31411,
+    "n_negative": 62271
+  },
+  "warning": "This is the authoritative final evaluation. Do not re-run to improve metrics \u2014 that would invalidate the holdout."
+}

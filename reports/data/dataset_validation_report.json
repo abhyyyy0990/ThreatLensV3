@@ -1,0 +1,77 @@
+{
+  "validated_at": "2026-08-20T05:53:29.796810+00:00",
+  "raw_file": "/Users/abhishektalli/Desktop/ThreatLensV3/data/raw/malicious_phish.csv",
+  "errors": [],
+  "warnings": [
+    "10,072 exact duplicate URLs (will be removed in prepare_data.py).",
+    "6 URLs have conflicting labels across duplicates."
+  ],
+  "passed": true,
+  "n_rows_raw": 651191,
+  "n_cols": 2,
+  "columns": [
+    "url",
+    "type"
+  ],
+  "unique_labels": [
+    "benign",
+    "defacement",
+    "malware",
+    "phishing"
+  ],
+  "missing_values": {
+    "url": 0,
+    "label": 0
+  },
+  "class_distribution": {
+    "benign": 428103,
+    "defacement": 96457,
+    "phishing": 94111,
+    "malware": 32520
+  },
+  "n_malformed_urls": 0,
+  "n_exact_duplicate_urls": 10072,
+  "n_label_conflicted_urls": 6,
+  "n_unique_domains": 196513,
+  "top_20_domains_by_frequency": {
+    "en.wikipedia.org": 13206,
+    "youtube.com": 8617,
+    "facebook.com": 7735,
+    "amazon.com": 4618,
+    "9779.info": 3984,
+    "imdb.com": 3470,
+    "linkedin.com": 3426,
+    "tools.ietf.org": 3190,
+    "myspace.com": 3015,
+    "mitsui-jyuku.mixh.jp": 2879,
+    "mylife.com": 2822,
+    "manta.com": 2075,
+    "pastehtml.com": 1892,
+    "absoluteastronomy.com": 1866,
+    "wn.com": 1860,
+    "twitter.com": 1837,
+    "pipl.com": 1663,
+    "answers.com": 1654,
+    "'9d345009-a-62cb3a1a-s-sites.googlegroups.com": 1379,
+    "torcache.net": 1367
+  },
+  "provenance": {
+    "source": "Kaggle: sid321axn/malicious-urls-dataset",
+    "original_sources": [
+      "PhishTank",
+      "OpenPhish",
+      "Alexa Top 1M",
+      "Malware Domain Blocklist"
+    ],
+    "license": "CC0 Public Domain",
+    "file": "malicious_phish.csv",
+    "note": "Aggregated multi-source dataset. No timestamps available for time-aware splitting."
+  },
+  "binary_distribution": {
+    "malicious": 223088,
+    "benign": 428103,
+    "imbalance_ratio_pos_neg": 0.5211
+  },
+  "n_warnings": 2,
+  "n_errors": 0
+}

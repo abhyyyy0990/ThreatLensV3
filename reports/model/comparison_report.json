@@ -1,0 +1,102 @@
+{
+  "generated_at": "2026-08-20T06:08:32.274321+00:00",
+  "dataset_version": "v001",
+  "feature_version": "v001",
+  "random_seed": 42,
+  "models_evaluated": [
+    {
+      "threshold": 0.5,
+      "accuracy": 0.889523,
+      "precision": 0.801302,
+      "recall": 0.806655,
+      "f1": 0.80397,
+      "roc_auc": 0.936014,
+      "pr_auc": 0.89624,
+      "specificity": 0.921885,
+      "fpr": 0.078115,
+      "fnr": 0.193345,
+      "tp": 25600,
+      "tn": 74917,
+      "fp": 6348,
+      "fn": 6136,
+      "n_samples": 113001,
+      "n_positive": 31736,
+      "n_negative": 81265,
+      "model": "RandomForest"
+    },
+    {
+      "threshold": 0.5,
+      "accuracy": 0.891718,
+      "precision": 0.833311,
+      "recall": 0.768087,
+      "f1": 0.79937,
+      "roc_auc": 0.926291,
+      "pr_auc": 0.882594,
+      "specificity": 0.939999,
+      "fpr": 0.060001,
+      "fnr": 0.231913,
+      "tp": 24376,
+      "tn": 76389,
+      "fp": 4876,
+      "fn": 7360,
+      "n_samples": 113001,
+      "n_positive": 31736,
+      "n_negative": 81265,
+      "model": "HistGradientBoosting"
+    },
+    {
+      "threshold": 0.5,
+      "accuracy": 0.774409,
+      "precision": 0.573317,
+      "recall": 0.769253,
+      "f1": 0.656988,
+      "roc_auc": 0.853183,
+      "pr_auc": 0.736628,
+      "specificity": 0.776423,
+      "fpr": 0.223577,
+      "fnr": 0.230747,
+      "tp": 24413,
+      "tn": 63096,
+      "fp": 18169,
+      "fn": 7323,
+      "n_samples": 113001,
+      "n_positive": 31736,
+      "n_negative": 81265,
+      "model": "LogisticRegression"
+    }
+  ],
+  "best_model": "RandomForest",
+  "calibration": {
+    "platt_ece": 0.021027,
+    "isotonic_ece": 0.0,
+    "recommended": "isotonic"
+  },
+  "threshold": {
+    "selected": 0.39,
+    "criterion": "f1",
+    "sweep_summary": {
+      "start": 0.05,
+      "stop": 0.95,
+      "step": 0.01
+    }
+  },
+  "final_validation_metrics": {
+    "threshold": 0.39,
+    "accuracy": 0.899788,
+    "precision": 0.866095,
+    "recall": 0.760808,
+    "f1": 0.810045,
+    "roc_auc": 0.936436,
+    "pr_auc": 0.891999,
+    "specificity": 0.954064,
+    "fpr": 0.045936,
+    "fnr": 0.239192,
+    "tp": 24145,
+    "tn": 77532,
+    "fp": 3733,
+    "fn": 7591,
+    "n_samples": 113001,
+    "n_positive": 31736,
+    "n_negative": 81265
+  }
+}
