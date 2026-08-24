@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { apiClient } from '../api/client';
 import { CaseRecord } from '../types';
 import { VerdictBadge } from '../components/VerdictBadge';
-import { Briefcase, Plus, FileText, CheckCircle2, Clock, ShieldAlert, ArrowRight, Printer } from 'lucide-react';
+import { Briefcase, FileText, Printer, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 export const CaseManager: React.FC = () => {
   const [cases, setCases] = useState<CaseRecord[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedCase, setSelectedCase] = useState<CaseRecord | null>(null);
   const [newNote, setNewNote] = useState('');
   const [reportData, setReportData] = useState<any | null>(null);
@@ -21,8 +20,6 @@ export const CaseManager: React.FC = () => {
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -61,26 +58,28 @@ export const CaseManager: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-[1500px] mx-auto pb-16">
-      <div className="border-b border-outline-variant pb-4">
-        <h2 className="text-xl font-bold text-on-surface tracking-tight flex items-center gap-2">
-          <Briefcase className="w-5 h-5 text-primary" />
+    <div className="space-y-6 max-w-[1600px] mx-auto pb-16">
+      <div className="border-b border-white/[0.06] pb-4">
+        <h2 className="text-xl font-bold text-text-primary tracking-tight flex items-center gap-2">
+          <Briefcase className="w-5 h-5 text-cyan-400" />
           <span>Incident Triage & Forensic Case Management</span>
         </h2>
-        <p className="text-xs text-on-surface-variant mt-0.5">
+        <p className="text-xs text-text-secondary mt-0.5">
           Track security triage investigations, log findings, update lifecycle status, and generate audit-ready forensic reports.
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Col: Cases List */}
-        <div className="bg-white border border-outline-variant rounded-xl shadow-feather overflow-hidden">
-          <div className="p-4 border-b border-outline-variant bg-surface-container-low/40 flex justify-between items-center">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-on-surface">Active Incident Cases ({cases.length})</h3>
-            <span className="text-[10px] font-mono text-outline">SQLite Persistence</span>
+        <div className="bg-surface border border-white/[0.08] rounded-xl shadow-card overflow-hidden">
+          <div className="p-4 border-b border-white/[0.06] bg-surface-elevated/40 flex justify-between items-center">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-text-primary">
+              Active Incident Queue ({cases.length})
+            </h3>
+            <span className="text-[10px] font-mono text-cyan-400">SQLite Active</span>
           </div>
 
-          <div className="divide-y divide-outline-variant/40 max-h-[600px] overflow-y-auto">
+          <div className="divide-y divide-white/[0.04] max-h-[600px] overflow-y-auto">
             {cases.map((c) => {
               const isSelected = selectedCase?.case_id === c.case_id;
               return (
@@ -91,30 +90,30 @@ export const CaseManager: React.FC = () => {
                     setReportData(null);
                   }}
                   className={`p-4 cursor-pointer transition-colors ${
-                    isSelected ? 'bg-primary/5 border-l-4 border-l-primary' : 'hover:bg-surface-container-low/40'
+                    isSelected ? 'bg-cyan-500/[0.08] border-l-2 border-l-cyan-400' : 'hover:bg-surface-elevated/40'
                   }`}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="font-mono text-xs font-bold text-primary">{c.case_id}</span>
+                  <div className="flex items-center justify-between gap-2 mb-1.5 font-mono">
+                    <span className="text-xs font-bold text-cyan-400">{c.case_id}</span>
                     <span
-                      className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase ${
+                      className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase border ${
                         c.status === 'Open'
-                          ? 'bg-amber-100 text-amber-800'
+                          ? 'bg-amber-500/15 text-amber-400 border-amber-500/30'
                           : c.status === 'Resolved'
-                          ? 'bg-secondary-container text-secondary'
-                          : 'bg-surface-container-highest text-on-surface-variant'
+                          ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+                          : 'bg-white/5 text-text-muted border-white/10'
                       }`}
                     >
                       {c.status}
                     </span>
                   </div>
 
-                  <h4 className="text-xs font-bold text-on-surface line-clamp-1">{c.title}</h4>
-                  <p className="text-[11px] text-outline font-mono truncate mt-0.5">{c.target_value}</p>
+                  <h4 className="text-xs font-bold text-text-primary line-clamp-1">{c.title}</h4>
+                  <p className="text-[11px] text-text-muted font-mono truncate mt-0.5">{c.target_value}</p>
 
-                  <div className="flex items-center justify-between mt-3 text-[11px]">
+                  <div className="flex items-center justify-between mt-3 text-[11px] font-mono">
                     <VerdictBadge verdict={c.verdict} size="sm" />
-                    <span className="font-mono text-outline">Risk {c.risk_score}/100</span>
+                    <span className="text-text-muted">Risk {c.risk_score}/100</span>
                   </div>
                 </div>
               );
@@ -125,42 +124,42 @@ export const CaseManager: React.FC = () => {
         {/* Right 2 Cols: Case Details & Report */}
         <div className="lg:col-span-2 space-y-4">
           {selectedCase ? (
-            <div className="bg-white border border-outline-variant rounded-xl p-5 shadow-feather space-y-4">
-              <div className="flex flex-wrap justify-between items-start gap-3 border-b border-outline-variant/60 pb-4">
+            <div className="bg-surface border border-white/[0.08] rounded-xl p-5 shadow-card space-y-4">
+              <div className="flex flex-wrap justify-between items-start gap-3 border-b border-white/[0.06] pb-4">
                 <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-mono font-bold text-primary">{selectedCase.case_id}</span>
-                    <span className="px-2 py-0.5 rounded bg-surface-container-highest text-[10px] uppercase font-bold text-on-surface-variant">
+                  <div className="flex items-center gap-2 mb-1 font-mono">
+                    <span className="text-xs font-bold text-cyan-400">{selectedCase.case_id}</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[9px] uppercase font-bold text-text-secondary">
                       Priority: {selectedCase.priority}
                     </span>
                   </div>
-                  <h3 className="text-base font-bold text-on-surface">{selectedCase.title}</h3>
-                  <div className="text-xs font-mono text-outline mt-0.5">Target: {selectedCase.target_value}</div>
+                  <h3 className="text-base font-bold text-text-primary">{selectedCase.title}</h3>
+                  <div className="text-xs font-mono text-text-muted mt-0.5">Target: {selectedCase.target_value}</div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleGenerateReport}
                     disabled={generatingReport}
-                    className="px-3 py-1.5 bg-primary text-white text-xs font-semibold rounded-lg hover:bg-primary-container transition-all flex items-center gap-1.5 shadow-xs"
+                    className="px-3.5 py-2 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-400 hover:to-cyan-500 text-background text-xs font-mono font-bold rounded-lg shadow-[0_0_20px_rgba(0,166,198,0.3)] transition-all flex items-center gap-1.5"
                   >
                     <FileText className="w-3.5 h-3.5" />
-                    <span>{generatingReport ? 'Building Report...' : 'Generate Forensic Report'}</span>
+                    <span>{generatingReport ? 'Building...' : 'Generate Forensic Report'}</span>
                   </button>
                 </div>
               </div>
 
               {/* Status Triage Controls */}
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-outline font-semibold">Change Lifecycle Status:</span>
+              <div className="flex items-center gap-2 text-xs font-mono">
+                <span className="text-text-muted">Lifecycle Status:</span>
                 {['Open', 'Investigating', 'Resolved', 'Archived'].map((st) => (
                   <button
                     key={st}
                     onClick={() => handleUpdateStatus(st)}
-                    className={`px-2.5 py-1 rounded-md font-semibold text-xs transition-colors ${
+                    className={`px-2.5 py-1 rounded text-xs font-bold uppercase transition-colors ${
                       selectedCase.status === st
-                        ? 'bg-primary text-white'
-                        : 'bg-surface-container-highest text-on-surface-variant hover:bg-surface-container-high'
+                        ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 shadow-[0_0_10px_rgba(0,166,198,0.2)]'
+                        : 'bg-surface-elevated text-text-muted hover:text-text-primary border border-white/[0.06]'
                     }`}
                   >
                     {st}
@@ -169,17 +168,19 @@ export const CaseManager: React.FC = () => {
               </div>
 
               {/* Notes Feed */}
-              <div className="space-y-2 pt-2 border-t border-outline-variant/40">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-outline">Analyst Investigation Notes</h4>
+              <div className="space-y-2 pt-2 border-t border-white/[0.06]">
+                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-text-muted">
+                  Analyst Investigation Notes
+                </h4>
                 <div className="space-y-1.5 max-h-40 overflow-y-auto">
                   {selectedCase.notes && selectedCase.notes.length > 0 ? (
                     selectedCase.notes.map((n, i) => (
-                      <div key={i} className="p-2.5 rounded-lg bg-surface-container-low text-xs text-on-surface">
+                      <div key={i} className="p-2.5 rounded-lg bg-background font-mono text-xs text-text-primary border border-white/[0.06]">
                         {n}
                       </div>
                     ))
                   ) : (
-                    <div className="text-xs text-outline italic">No investigation notes logged yet.</div>
+                    <div className="text-xs text-text-muted font-mono italic">No investigation notes logged yet.</div>
                   )}
                 </div>
 
@@ -189,11 +190,11 @@ export const CaseManager: React.FC = () => {
                     value={newNote}
                     onChange={(e) => setNewNote(e.target.value)}
                     placeholder="Add an investigation finding or evidence note..."
-                    className="flex-1 px-3 py-1.5 bg-surface-container-low border border-outline-variant rounded-lg text-xs"
+                    className="flex-1 px-3 py-1.5 bg-background border border-white/[0.08] rounded-lg text-xs font-mono text-text-primary focus:outline-none focus:border-cyan-500/60"
                   />
                   <button
                     onClick={() => handleUpdateStatus(selectedCase.status)}
-                    className="px-3 py-1.5 bg-surface-container-highest hover:bg-surface-container-high text-xs font-semibold rounded-lg border border-outline-variant"
+                    className="px-3 py-1.5 bg-surface-elevated hover:bg-surface-hover text-xs font-mono font-bold text-text-primary rounded-lg border border-white/[0.08]"
                   >
                     Add Note
                   </button>
@@ -202,37 +203,37 @@ export const CaseManager: React.FC = () => {
 
               {/* Forensic Report Output */}
               {reportData && (
-                <div className="mt-6 pt-4 border-t-2 border-outline-variant space-y-3 bg-surface-container-low/30 p-4 rounded-xl border border-outline-variant animate-in fade-in">
-                  <div className="flex justify-between items-center border-b border-outline-variant pb-2">
+                <div className="mt-6 pt-4 border-t border-white/[0.08] space-y-3 bg-surface-elevated/40 p-4 rounded-xl border border-white/[0.08] animate-in fade-in">
+                  <div className="flex justify-between items-center border-b border-white/[0.06] pb-2">
                     <div>
-                      <h4 className="text-sm font-bold text-on-surface">{reportData.title}</h4>
-                      <div className="text-[10px] text-outline font-mono">Report Ref: {reportData.report_id} · {reportData.generated_at}</div>
+                      <h4 className="text-sm font-bold text-text-primary">{reportData.title}</h4>
+                      <div className="text-[10px] text-text-muted font-mono">Report Ref: {reportData.report_id} · {reportData.generated_at}</div>
                     </div>
                     <button
                       onClick={() => window.print()}
-                      className="px-2.5 py-1 bg-white border border-outline-variant text-xs font-semibold rounded-md flex items-center gap-1 hover:bg-surface-container-highest"
+                      className="px-2.5 py-1 bg-surface border border-white/[0.08] text-xs font-mono font-semibold rounded text-cyan-400 flex items-center gap-1 hover:bg-white/5"
                     >
                       <Printer className="w-3.5 h-3.5" />
                       <span>Print / PDF</span>
                     </button>
                   </div>
 
-                  <div className="text-xs text-on-surface space-y-2">
+                  <div className="text-xs text-text-primary space-y-2">
                     <div>
-                      <span className="font-bold text-outline uppercase text-[10px] block">Executive Summary</span>
-                      <p className="mt-0.5 leading-relaxed">{reportData.executive_summary}</p>
+                      <span className="font-mono font-bold text-cyan-400 uppercase text-[10px] block">Executive Summary</span>
+                      <p className="mt-0.5 leading-relaxed text-text-secondary">{reportData.executive_summary}</p>
                     </div>
 
                     <div>
-                      <span className="font-bold text-outline uppercase text-[10px] block">Remediation Recommendations</span>
-                      <ul className="list-disc list-inside space-y-0.5 mt-1 text-on-surface-variant">
+                      <span className="font-mono font-bold text-cyan-400 uppercase text-[10px] block">Remediation Recommendations</span>
+                      <ul className="list-disc list-inside space-y-0.5 mt-1 text-text-secondary">
                         {reportData.recommendations.map((rec: string, idx: number) => (
                           <li key={idx}>{rec}</li>
                         ))}
                       </ul>
                     </div>
 
-                    <div className="p-2.5 rounded bg-surface-container-highest/60 text-[10px] text-outline italic">
+                    <div className="p-2.5 rounded bg-background border border-white/[0.06] text-[10px] font-mono text-text-muted italic">
                       {reportData.attribution_disclaimer}
                     </div>
                   </div>
@@ -240,8 +241,8 @@ export const CaseManager: React.FC = () => {
               )}
             </div>
           ) : (
-            <div className="p-12 text-center text-outline bg-white border border-outline-variant rounded-xl">
-              Select a case from the triage list to inspect details.
+            <div className="p-12 text-center text-text-muted bg-surface border border-white/[0.08] rounded-xl font-mono text-xs">
+              Select a case from the incident queue to inspect details.
             </div>
           )}
         </div>

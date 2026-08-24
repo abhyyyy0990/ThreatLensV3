@@ -18,27 +18,27 @@ export const App: React.FC = () => {
   const getPageTitle = () => {
     switch (activeTab) {
       case 'dashboard':
-        return 'Cyber Operations Dashboard';
+        return 'Command Center';
       case 'email':
-        return 'Email Threat & Forensics Analyzer';
+        return 'Email Forensics Workspace';
       case 'url':
-        return 'URL & Domain ML Scanner';
+        return 'URL Security Scanner';
       case 'qr':
-        return 'QR Code & Quishing Scanner';
+        return 'QR Code & Quishing Analyzer';
       case 'screenshot':
-        return 'Screenshot & Message OCR Analyzer';
+        return 'Screenshot & Message OCR Scanner';
       case 'batch':
-        return 'Batch Security Vector Scanner';
+        return 'Batch Threat Vector Scanner';
       case 'graph':
         return 'Infrastructure Correlation Graph';
       case 'cases':
-        return 'Incident Triage & Case Management';
+        return 'Incident Case Management';
       case 'model':
-        return 'Model Performance & Telemetry';
+        return 'Active AI Model Performance';
       case 'settings':
         return 'System Configuration';
       default:
-        return 'ThreatLens';
+        return 'Command Center';
     }
   };
 
@@ -70,14 +70,14 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex">
+    <div className="min-h-screen bg-background text-text-primary flex selection:bg-cyan-500/30 selection:text-cyan-200">
       {/* Sidebar Navigation */}
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* Main Content Area */}
       <div className="flex-1 ml-[260px] flex flex-col min-h-screen">
         <Header title={getPageTitle()} />
-        <main className="flex-1 mt-14 p-8 bg-surface">
+        <main className="flex-1 mt-13 p-7 bg-background bg-cyber-grid">
           {renderActivePage()}
         </main>
       </div>

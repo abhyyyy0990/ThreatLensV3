@@ -8,44 +8,51 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#004ac6",
-        "primary-container": "#2563eb",
-        "primary-fixed": "#dbe1ff",
-        "primary-fixed-dim": "#b4c5ff",
-        "on-primary": "#ffffff",
+        background: "#070B12",
+        "background-secondary": "#0B111B",
+        surface: "#101722",
+        "surface-elevated": "#151E2B",
+        "surface-card": "#101722",
+        "surface-hover": "#1A2536",
         
-        secondary: "#2b6954",
-        "secondary-container": "#adedd3",
-        "secondary-fixed": "#b0f0d6",
-        "on-secondary": "#ffffff",
-
-        error: "#ba1a1a",
-        "error-container": "#ffdad6",
-        "on-error": "#ffffff",
-        "on-error-container": "#93000a",
-
-        background: "#f7f9fb",
-        surface: "#f7f9fb",
-        "surface-container-lowest": "#ffffff",
-        "surface-container-low": "#f2f4f6",
-        "surface-container": "#eceef0",
-        "surface-container-high": "#e6e8ea",
-        "surface-container-highest": "#e0e3e5",
+        primary: "#00A6C6",
+        "primary-hover": "#00C2E8",
+        "primary-glow": "rgba(0, 166, 198, 0.15)",
         
-        "on-background": "#191c1e",
-        "on-surface": "#191c1e",
-        "on-surface-variant": "#434655",
-        outline: "#737686",
-        "outline-variant": "#c3c6d7",
+        secondary: "#2B6954",
+        "secondary-hover": "#347D64",
+        
+        danger: "#FF4D67",
+        "danger-glow": "rgba(255, 77, 103, 0.15)",
+        
+        warning: "#F5B942",
+        "warning-glow": "rgba(245, 185, 66, 0.15)",
+        
+        success: "#35D07F",
+        "success-glow": "rgba(53, 208, 127, 0.15)",
+        
+        "text-primary": "#F5F7FA",
+        "text-secondary": "#8B98AA",
+        "text-muted": "#5A677A",
+        
+        border: "rgba(255, 255, 255, 0.08)",
+        "border-subtle": "rgba(255, 255, 255, 0.05)",
+        "border-accent": "rgba(0, 166, 198, 0.3)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["JetBrains Mono", "monospace"],
+        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        mono: ["JetBrains Mono", "SFMono-Regular", "Menlo", "monospace"],
       },
       boxShadow: {
-        feather: "0px 1px 3px rgba(0, 0, 0, 0.04), 0px 1px 2px rgba(0, 0, 0, 0.02)",
-        card: "0px 2px 4px -1px rgba(0, 0, 0, 0.05), 0px 1px 2px -1px rgba(0, 0, 0, 0.03)",
-      }
+        glow: "0 0 20px -5px rgba(0, 166, 198, 0.25)",
+        "glow-danger": "0 0 20px -5px rgba(255, 77, 103, 0.25)",
+        "glow-success": "0 0 20px -5px rgba(53, 208, 127, 0.25)",
+        card: "0 4px 20px -2px rgba(0, 0, 0, 0.5)",
+      },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "cyber-grid": "linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)",
+      },
     },
   },
   plugins: [],
