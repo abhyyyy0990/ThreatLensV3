@@ -4,7 +4,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_foundation_files_exist():
-    assert (ROOT / "app.py").exists()
+    assert (ROOT / "run.py").exists() or (ROOT / "backend/main.py").exists()
     assert (ROOT / "requirements.txt").exists()
     assert (ROOT / ".env.example").exists()
 
