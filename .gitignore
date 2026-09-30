@@ -23,4 +23,12 @@ data/raw/*
 data/processed/*
 data/splits/*
 models/production/*
+models/registry/*
 reports/generated/*
+
+# Large ML model binaries (exceed GitHub 100MB limit)
+**/*.joblib
+**/*.pkl
+**/*.h5
+**/*.bin
+**/*.onnx
