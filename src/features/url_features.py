@@ -225,12 +225,27 @@ def extract(url: str) -> dict[str, Any]:
     path_entropy = _char_entropy(path) if path else 0.0
 
     # ── 4. Semantic / security keyword features ───────────────
-    phishing_kw_count = _count_keyword_hits(full, _PHISHING_KEYWORDS)
+    # Brand names (google, paypal, etc.) are phishing signals ONLY when
+    # they appear in a URL that is NOT owned by that brand.
+    # e.g. paypal-login.xyz  → flag  |  paypal.com → do NOT flag
+    _BRAND_KEYWORDS = frozenset({
+        "paypal", "apple", "google", "microsoft",
+        "amazon", "netflix", "instagram",
+    })
+    _NON_BRAND_KEYWORDS = _PHISHING_KEYWORDS - _BRAND_KEYWORDS
+
+    # Check non-brand phishing keywords against full URL
+    phishing_kw_count = _count_keyword_hits(full, _NON_BRAND_KEYWORDS)
+
+    # Check brand keywords only against subdomain + path (not registered domain itself)
+    non_domain_part = f"{subdomain}/{path}/{query}"
+    brand_hits_in_non_domain = _count_keyword_hits(non_domain_part, _BRAND_KEYWORDS)
+    phishing_kw_count += brand_hits_in_non_domain
+
     has_phishing_keyword = int(phishing_kw_count > 0)
 
     # Subdomain or path contains a known brand name without owning the domain
-    # (Very basic check — no DNS call needed.)
-    brand_in_subdomain = _count_keyword_hits(subdomain, _PHISHING_KEYWORDS)
+    brand_in_subdomain = _count_keyword_hits(subdomain, _BRAND_KEYWORDS)
 
     # Suspicious patterns
     has_long_subdomain = int(hostname_len > 30)

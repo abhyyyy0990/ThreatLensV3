@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { apiClient } from '../api/client';
 import { ThreatResult } from '../types';
 import { VerdictBadge } from '../components/VerdictBadge';
-import { Layers, Download, AlertTriangle } from 'lucide-react';
-
 export const BatchScanner: React.FC = () => {
   const [urlsText, setUrlsText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -67,25 +65,25 @@ http://update-your-bank-account.ru/login.php`;
   };
 
   return (
-    <div className="space-y-6 max-w-[1600px] mx-auto pb-16">
-      <div className="border-b border-border pb-6">
-        <h2 className="text-2xl font-bold text-text-primary tracking-tight flex items-center gap-2.5">
-          <Layers className="w-6 h-6 text-primary" />
+    <div className="flex flex-col gap-space-lg pb-16">
+      <div className="pb-space-md">
+        <h2 className="text-2xl font-bold text-on-surface tracking-tight flex items-center gap-2.5">
+          <span className="material-symbols-outlined text-[24px]">layers</span>
           <span>Batch Security Vector & CSV Analyzer</span>
         </h2>
-        <p className="text-sm text-text-secondary mt-1 max-w-3xl leading-relaxed">
+        <p className="text-sm text-on-surface-variant mt-1 max-w-3xl leading-relaxed">
           Execute parallel machine-learning inference over large sets of URLs, domains, and suspicious link lists.
         </p>
       </div>
 
-      <div className="bg-surface border border-border rounded-xl p-6 shadow-card space-y-4">
+      <div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/20 space-y-4">
         <div className="flex justify-between items-center">
-          <label className="text-xs font-mono font-bold uppercase tracking-wider text-text-muted">
+          <label className="text-xs font-mono font-bold uppercase tracking-wider text-on-surface-variant">
             Enter URLs (One per line)
           </label>
           <button
             onClick={() => setUrlsText(sampleBatch)}
-            className="text-xs text-primary font-mono font-semibold hover:underline"
+            className="text-xs text-secondary font-mono font-semibold hover:underline"
           >
             Load Sample Batch List (6 URLs)
           </button>
@@ -96,24 +94,24 @@ http://update-your-bank-account.ru/login.php`;
           value={urlsText}
           onChange={(e) => setUrlsText(e.target.value)}
           placeholder="http://example.com/url-1&#10;http://example.com/url-2"
-          className="w-full p-4 font-mono text-xs bg-surface border border-border rounded-xl text-text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+          className="w-full p-4 font-mono text-xs bg-surface-container-lowest rounded-xl text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary"
         />
 
         {error && (
-          <div className="p-3.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700 flex items-center gap-2 font-medium">
-            <AlertTriangle className="w-4 h-4" />
+          <div className="p-3.5 bg-red-50 border border-red-200 rounded-lg text-xs text-error flex items-center gap-2 font-medium">
+            <span className="material-symbols-outlined text-[16px]">warning</span>
             <span>{error}</span>
           </div>
         )}
 
         <div className="flex justify-between items-center">
-          <span className="text-xs font-mono text-text-muted">
+          <span className="text-xs font-mono text-on-surface-variant">
             {urlsText.split('\n').filter((u) => u.trim()).length} target(s) listed
           </span>
           <button
             onClick={handleScan}
             disabled={loading}
-            className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-semibold text-xs rounded-lg shadow-button transition-colors flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2.5 bg-primary hover:opacity-90 text-on-primary font-semibold text-xs rounded-lg shadow-button transition-colors flex items-center gap-2 disabled:opacity-50"
           >
             {loading ? 'Executing Batch ML...' : 'Run Batch Analysis'}
           </button>
@@ -124,13 +122,13 @@ http://update-your-bank-account.ru/login.php`;
         <div className="space-y-4 animate-in fade-in">
           {/* Summary KPI Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-surface border border-border text-center shadow-xs">
-              <div className="text-[10px] uppercase font-bold text-text-muted">Total Items</div>
-              <div className="text-2xl font-bold text-text-primary mt-1 font-mono">{stats.total}</div>
+            <div className="p-4 rounded-xl bg-surface border border-outline-variant/20 text-center shadow-xs">
+              <div className="text-[10px] uppercase font-bold text-on-surface-variant">Total Items</div>
+              <div className="text-2xl font-bold text-on-surface mt-1 font-mono">{stats.total}</div>
             </div>
             <div className="p-4 rounded-xl bg-red-50/50 border border-red-200 text-center shadow-xs">
-              <div className="text-[10px] uppercase font-bold text-red-700">Malicious</div>
-              <div className="text-2xl font-bold text-red-700 mt-1 font-mono">{stats.malicious}</div>
+              <div className="text-[10px] uppercase font-bold text-error">Malicious</div>
+              <div className="text-2xl font-bold text-error mt-1 font-mono">{stats.malicious}</div>
             </div>
             <div className="p-4 rounded-xl bg-amber-50/50 border border-amber-200 text-center shadow-xs">
               <div className="text-[10px] uppercase font-bold text-amber-700">Suspicious</div>
@@ -142,14 +140,14 @@ http://update-your-bank-account.ru/login.php`;
             </div>
           </div>
 
-          <div className="bg-surface border border-border rounded-xl shadow-card overflow-hidden">
-            <div className="p-4 border-b border-border flex justify-between items-center bg-surface-muted">
-              <h4 className="text-xs font-bold uppercase text-text-primary">Batch Result Table</h4>
+          <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+            <div className="p-4 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-low">
+              <h4 className="text-xs font-bold uppercase text-on-surface">Batch Result Table</h4>
               <button
                 onClick={handleExportCsv}
-                className="px-3.5 py-1.5 bg-surface hover:bg-background-subtle text-text-primary text-xs font-medium rounded-lg flex items-center gap-1.5 border border-border shadow-xs"
+                className="px-3.5 py-1.5 bg-surface hover:bg-surface-container-low text-on-surface text-xs font-medium rounded-lg flex items-center gap-1.5 border border-outline-variant/20 shadow-xs"
               >
-                <Download className="w-3.5 h-3.5" />
+                <span className="material-symbols-outlined text-[12px]">file_download</span>
                 <span>Export CSV</span>
               </button>
             </div>
@@ -157,7 +155,7 @@ http://update-your-bank-account.ru/login.php`;
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs font-mono border-collapse">
                 <thead>
-                  <tr className="bg-background-subtle border-b border-border text-[10px] font-bold uppercase text-text-muted">
+                  <tr className="bg-surface-container-low border-b border-outline-variant/20 text-[10px] font-bold uppercase text-on-surface-variant">
                     <th className="py-2.5 px-4">#</th>
                     <th className="py-2.5 px-4">Target URL</th>
                     <th className="py-2.5 px-4">Verdict</th>
@@ -166,23 +164,23 @@ http://update-your-bank-account.ru/login.php`;
                     <th className="py-2.5 px-4">Confidence</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border/60">
+                <tbody className="divide-y divide-outline-variant/10">
                   {results.map((r, i) => (
-                    <tr key={i} className="hover:bg-background-subtle/50">
-                      <td className="py-3 px-4 text-text-muted">{i + 1}</td>
-                      <td className="py-3 px-4 text-text-primary max-w-[400px] truncate" title={r.url}>
+                    <tr key={i} className="hover:bg-surface-container-low/50">
+                      <td className="py-3 px-4 text-on-surface-variant">{i + 1}</td>
+                      <td className="py-3 px-4 text-on-surface max-w-[400px] truncate" title={r.url}>
                         {r.url}
                       </td>
                       <td className="py-3 px-4">
                         <VerdictBadge verdict={r.verdict} size="sm" />
                       </td>
                       <td className="py-3 px-4 font-bold">
-                        <span className={r.risk_score >= 65 ? 'text-red-600' : r.risk_score >= 35 ? 'text-amber-600' : 'text-emerald-600'}>
+                        <span className={r.risk_score >= 65 ? 'text-error' : r.risk_score >= 35 ? 'text-amber-600' : 'text-emerald-600'}>
                           {r.risk_score}/100
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-text-primary">{r.probability.toFixed(4)}</td>
-                      <td className="py-3 px-4 text-text-secondary">{r.confidence}</td>
+                      <td className="py-3 px-4 text-on-surface">{r.probability.toFixed(4)}</td>
+                      <td className="py-3 px-4 text-on-surface-variant">{r.confidence}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -38,8 +38,11 @@ from src.utils.logger import get_logger
 
 log = get_logger(__name__)
 
-REGISTRY_ROOT = Path("models/registry")
-PRODUCTION_ROOT = Path("models/production")
+# Bug 10 fix: use absolute paths so the registry works regardless of CWD.
+# __file__ is src/ml/registry.py → parent.parent.parent is the project root.
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+REGISTRY_ROOT = _PROJECT_ROOT / "models" / "registry"
+PRODUCTION_ROOT = _PROJECT_ROOT / "models" / "production"
 
 
 def _sha256(path: Path) -> str:

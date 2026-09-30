@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { GraphNode, GraphEdge } from '../types';
-import { Network, Server, Globe, Mail, Link2, ShieldAlert, Cpu } from 'lucide-react';
 
 interface EntityGraphProps {
   nodes: GraphNode[];
@@ -8,165 +7,135 @@ interface EntityGraphProps {
   summary?: string;
 }
 
+function nodeIconName(type: string): string {
+  switch (type) {
+    case 'sender':
+    case 'email':    return 'mail';
+    case 'domain':   return 'language';
+    case 'ip':       return 'dns';
+    case 'asn':      return 'memory';
+    case 'url':      return 'link';
+    case 'campaign': return 'gpp_maybe';
+    default:         return 'hub';
+  }
+}
+
+function getNodeStyle(risk: string, isSelected: boolean) {
+  let base = 'bg-surface border-outline-variant/20 text-on-surface hover:border-secondary/40';
+  let badge = 'bg-surface-container text-on-surface-variant border-outline-variant/30';
+
+  if (risk === 'critical') {
+    base = 'bg-error-container/20 border-error/30 text-on-error-container';
+    badge = 'bg-error-container text-on-error-container border-error/40';
+  } else if (risk === 'high') {
+    base = 'bg-error-container/10 border-error/20 text-on-error-container';
+    badge = 'bg-error-container/60 text-on-error-container border-error/20';
+  } else if (risk === 'medium') {
+    base = 'bg-amber-50/30 border-amber-200 text-amber-800';
+    badge = 'bg-amber-100 text-amber-800 border-amber-200';
+  } else {
+    base = 'bg-secondary-fixed/20 border-secondary/20 text-on-surface';
+    badge = 'bg-secondary-fixed text-on-secondary-fixed border-secondary-fixed/40';
+  }
+
+  if (isSelected) {
+    base += ' ring-2 ring-secondary border-secondary shadow-sm';
+  }
+  return { base, badge };
+}
+
 export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary }) => {
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(nodes[0] || null);
 
-  const getNodeIcon = (type: string) => {
-    switch (type) {
-      case 'sender':
-      case 'email':
-        return Mail;
-      case 'domain':
-        return Globe;
-      case 'ip':
-        return Server;
-      case 'asn':
-        return Cpu;
-      case 'url':
-        return Link2;
-      case 'campaign':
-        return ShieldAlert;
-      default:
-        return Network;
-    }
-  };
-
-  const getNodeStyle = (risk: string, isSelected: boolean) => {
-    let base = 'bg-surface border-border text-text-primary hover:border-slate-300';
-    let badge = 'bg-slate-100 text-slate-700 border-slate-200';
-
-    if (risk === 'critical') {
-      base = 'bg-red-50/40 border-red-200 text-red-900';
-      badge = 'bg-red-100 text-red-700 border-red-200';
-    } else if (risk === 'high') {
-      base = 'bg-red-50/20 border-red-200 text-red-800';
-      badge = 'bg-red-50 text-red-700 border-red-200';
-    } else if (risk === 'medium') {
-      base = 'bg-amber-50/30 border-amber-200 text-amber-800';
-      badge = 'bg-amber-100 text-amber-800 border-amber-200';
-    } else {
-      base = 'bg-blue-50/30 border-blue-200 text-blue-800';
-      badge = 'bg-blue-100 text-blue-800 border-blue-200';
-    }
-
-    if (isSelected) {
-      base += ' ring-2 ring-primary border-primary shadow-sm';
-    }
-
-    return { base, badge };
-  };
-
   return (
-    <div className="bg-surface border border-border rounded-xl p-5 shadow-card space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
+    <div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/20 flex flex-col gap-space-md">
+      <div className="flex flex-wrap items-center justify-between gap-space-md border-b border-outline-variant/20 pb-space-md">
         <div>
-          <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-            <Network className="w-4 h-4 text-primary" />
-            <span>Infrastructure & Campaign Threat Correlation Network</span>
+          <h3 className="text-[14px] font-bold text-on-surface flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px] text-secondary">hub</span>
+            <span>Infrastructure &amp; Campaign Threat Correlation Network</span>
           </h3>
-          {summary && <p className="text-xs text-text-secondary mt-1">{summary}</p>}
+          {summary && <p className="text-[13px] text-on-surface-variant mt-1">{summary}</p>}
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-mono text-primary font-semibold px-2.5 py-1 rounded-md bg-primary-subtle border border-primary-border">
-            {nodes.length} NODES · {edges.length} EDGES
-          </span>
-        </div>
+        <span className="font-mono text-[11px] font-semibold px-2.5 py-1 rounded-md bg-secondary-fixed text-on-secondary-fixed">
+          {nodes.length} NODES · {edges.length} EDGES
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Nodes Grid Canvas */}
-        <div className="lg:col-span-2 bg-background-subtle p-4 rounded-xl border border-border space-y-3.5">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
+        {/* Nodes Grid */}
+        <div className="lg:col-span-2 bg-surface-container-low p-space-md rounded-xl border border-outline-variant/20 flex flex-col gap-space-md">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
             {nodes.map((node) => {
-              const Icon = getNodeIcon(node.type);
               const isSelected = selectedNode?.id === node.id;
               const { base, badge } = getNodeStyle(node.risk, isSelected);
-
               return (
                 <div
                   key={node.id}
                   onClick={() => setSelectedNode(node)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all duration-150 flex flex-col justify-between space-y-2.5 ${base}`}
+                  className={`p-space-md rounded-xl border cursor-pointer transition-all duration-150 flex flex-col gap-space-sm ${base}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5">
-                      <div className="p-2 rounded-lg bg-surface border border-border shadow-xs">
-                        <Icon className="w-4 h-4 text-text-primary" />
+                      <div className="p-2 rounded-lg bg-surface-container-lowest border border-outline-variant/20 shadow-xs">
+                        <span className="material-symbols-outlined text-[16px] text-on-surface">{nodeIconName(node.type)}</span>
                       </div>
                       <div>
-                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-text-muted block">
-                          {node.type}
-                        </span>
-                        <span className="font-mono text-xs font-bold text-text-primary line-clamp-1">
-                          {node.label}
-                        </span>
+                        <span className="text-[10px] font-mono uppercase font-bold tracking-wider text-on-surface-variant block">{node.type}</span>
+                        <span className="font-mono text-[12px] font-bold text-on-surface line-clamp-1">{node.label}</span>
                       </div>
                     </div>
-                    <span className={`text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${badge}`}>
-                      {node.risk}
-                    </span>
+                    <span className={`text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border ${badge}`}>{node.risk}</span>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* Links visualization */}
-          <div className="space-y-1.5 pt-3 border-t border-border">
-            <h5 className="text-[10px] font-mono font-bold uppercase text-text-muted tracking-wider">
-              Discovered Correlation Edges
-            </h5>
+          {/* Edges list */}
+          <div className="flex flex-col gap-1 pt-space-sm border-t border-outline-variant/20">
+            <h5 className="text-[10px] font-mono font-bold uppercase text-on-surface-variant tracking-wider">Correlation Edges</h5>
             <div className="flex flex-wrap gap-1.5">
               {edges.map((edge, idx) => (
-                <div
-                  key={idx}
-                  className="text-[11px] bg-surface border border-border px-2.5 py-1 rounded-md text-text-secondary font-mono flex items-center gap-1.5 shadow-xs"
-                >
-                  <span className="font-bold text-primary">{edge.source}</span>
-                  <span className="text-text-muted">--[{edge.label || edge.relation}]--&gt;</span>
-                  <span className="font-bold text-text-primary">{edge.target}</span>
+                <div key={idx} className="text-[11px] bg-surface-container border border-outline-variant/20 px-2.5 py-1 rounded-md text-on-surface-variant font-mono flex items-center gap-1.5">
+                  <span className="font-bold text-secondary">{edge.source}</span>
+                  <span className="text-outline">→</span>
+                  <span className="text-on-surface-variant">[{edge.label || edge.relation}]</span>
+                  <span className="text-outline">→</span>
+                  <span className="font-bold text-on-surface">{edge.target}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Selected Entity Inspector Panel */}
-        <div className="bg-surface p-4.5 rounded-xl border border-border shadow-xs space-y-3.5">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-text-primary border-b border-border pb-2.5">
-            Entity Intelligence Inspector
-          </h4>
-
+        {/* Inspector Panel */}
+        <div className="bg-surface-container-low p-space-md rounded-xl border border-outline-variant/20 flex flex-col gap-space-md">
+          <h4 className="text-[11px] font-bold uppercase tracking-wider text-on-surface border-b border-outline-variant/20 pb-space-sm">Entity Intelligence Inspector</h4>
           {selectedNode ? (
-            <div className="space-y-3 text-xs">
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono uppercase text-text-muted">Entity Identifier</span>
-                <div className="font-mono font-bold text-text-primary break-all bg-background-subtle p-2.5 rounded-lg border border-border">
-                  {selectedNode.label}
+            <div className="flex flex-col gap-space-md text-[12px]">
+              <div>
+                <span className="text-[10px] font-mono uppercase text-on-surface-variant">Entity Identifier</span>
+                <div className="font-mono font-bold text-on-surface break-all bg-surface-container-lowest p-space-sm rounded-lg border border-outline-variant/20 mt-1">{selectedNode.label}</div>
+              </div>
+              <div className="grid grid-cols-2 gap-space-sm">
+                <div className="p-space-sm rounded-lg bg-surface-container-lowest border border-outline-variant/20">
+                  <span className="text-[10px] text-on-surface-variant block">Type</span>
+                  <span className="text-secondary font-bold uppercase">{selectedNode.type}</span>
+                </div>
+                <div className="p-space-sm rounded-lg bg-surface-container-lowest border border-outline-variant/20">
+                  <span className="text-[10px] text-on-surface-variant block">Risk</span>
+                  <span className={`font-bold uppercase ${selectedNode.risk === 'critical' ? 'text-error' : 'text-amber-700'}`}>{selectedNode.risk}</span>
                 </div>
               </div>
-
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div className="p-2.5 rounded-lg bg-background-subtle border border-border">
-                  <span className="text-[10px] text-text-muted font-sans block">Type</span>
-                  <span className="text-primary font-bold uppercase">{selectedNode.type}</span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-background-subtle border border-border">
-                  <span className="text-[10px] text-text-muted font-sans block">Risk Level</span>
-                  <span className={`font-bold uppercase ${selectedNode.risk === 'critical' ? 'text-red-700' : 'text-amber-700'}`}>
-                    {selectedNode.risk}
-                  </span>
-                </div>
-              </div>
-
               {selectedNode.metadata && Object.keys(selectedNode.metadata).length > 0 && (
-                <div className="space-y-1.5 pt-2 border-t border-border">
-                  <span className="text-[10px] font-mono uppercase text-text-muted">Extracted Metadata</span>
-                  <div className="space-y-1.5 font-mono text-[11px] bg-background-subtle p-3 rounded-lg border border-border">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-mono uppercase text-on-surface-variant">Extracted Metadata</span>
+                  <div className="font-mono text-[11px] bg-surface-container-lowest p-space-sm rounded-lg border border-outline-variant/20 flex flex-col gap-1">
                     {Object.entries(selectedNode.metadata).map(([k, v]) => (
                       <div key={k} className="flex justify-between">
-                        <span className="text-text-muted">{k}:</span>
-                        <span className="text-text-primary font-semibold">{String(v)}</span>
+                        <span className="text-on-surface-variant">{k}:</span>
+                        <span className="text-on-surface font-semibold">{String(v)}</span>
                       </div>
                     ))}
                   </div>
@@ -174,9 +143,7 @@ export const EntityGraph: React.FC<EntityGraphProps> = ({ nodes, edges, summary 
               )}
             </div>
           ) : (
-            <div className="text-xs text-text-muted text-center py-8">
-              Click any node in the correlation network to inspect threat telemetry.
-            </div>
+            <div className="text-[12px] text-on-surface-variant text-center py-8">Click any node to inspect threat telemetry.</div>
           )}
         </div>
       </div>

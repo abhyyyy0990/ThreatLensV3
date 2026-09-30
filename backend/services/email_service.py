@@ -67,12 +67,15 @@ def analyze_email_content(content: str | bytes, save_history: bool = True) -> Em
             auth_penalty += 25
         elif a.status == "SOFTFAIL":
             auth_penalty += 15
+    auth_penalty = min(auth_penalty, 75)  # Bug 6 fix: cap auth penalty
 
-    header_penalty = len(header_forensics["anomalies"]) * 20
+    # Bug 6 fix: cap header_penalty — each anomaly adds 15 pts, max 40 total
+    header_penalty = min(len(header_forensics["anomalies"]) * 15, 40)
     nlp_penalty = sum(15 for s in nlp_signals if s.detected)
     att_penalty = sum(35 for a in parsed.attachments if a.get("is_executable"))
 
     computed_risk = max(base_url_score, min(100, int(base_url_score * 0.5 + auth_penalty + header_penalty + nlp_penalty + att_penalty)))
+
     
     # Verdict mapping
     if any(r.verdict == "Malicious" for r in url_results) or computed_risk >= 65 or att_penalty >= 35:

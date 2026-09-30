@@ -87,10 +87,10 @@ export interface IpIntelResponse {
   domain?: string;
   threat_score: number;
   threat_level: string;
-  is_proxy_or_vpn: boolean;
-  is_tor_node: boolean;
-  is_known_attacker: boolean;
-  attribution_note: string;
+  is_proxy_or_vpn?: boolean;  // Bug 13 fix: not guaranteed by all backend paths
+  is_tor_node?: boolean;
+  is_known_attacker?: boolean;
+  attribution_note?: string;
 }
 
 export interface DomainIntelResponse {
@@ -160,12 +160,16 @@ export interface CaseRecord {
 
 export interface ScanHistoryItem {
   id: number;
-  scan_type: 'url' | 'email';
+  scan_type: 'url' | 'email' | 'qr' | 'screenshot' | 'batch';
   input_repr: string;
   verdict: 'Malicious' | 'Safe' | 'Suspicious';
   risk_score: number;
   confidence: string;
   scanned_at: string;
+  // Convenience aliases — Dashboard uses these
+  target?: string;
+  score?: number;
+  timestamp?: string;
 }
 
 export interface SystemStats {

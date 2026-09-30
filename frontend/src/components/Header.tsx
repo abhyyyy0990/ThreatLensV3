@@ -1,60 +1,97 @@
 import React from 'react';
-import { Search, Bell, HelpCircle, Activity } from 'lucide-react';
 
 interface HeaderProps {
-  onSearch?: (query: string) => void;
   title?: string;
-  subtitle?: string;
+  username?: string;
+  onLogout?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ title }) => {
+export const Header: React.FC<HeaderProps> = ({ title, username, onLogout }) => {
   return (
-    <header className="h-14 bg-surface border-b border-border fixed top-0 right-0 left-[260px] z-30 px-8 flex items-center justify-between">
-      {/* Breadcrumb / Title */}
-      <div className="flex items-center gap-2.5 text-xs">
-        <span className="text-text-muted font-medium">ThreatLens</span>
-        <span className="text-text-muted">/</span>
-        <span className="text-text-primary font-semibold tracking-wide">
-          {title || 'Command Center'}
-        </span>
-      </div>
+    <header className="fixed top-0 left-64 right-0 h-14 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant/20 z-40 flex items-center justify-between px-space-xl gap-space-lg">
+      {/* Breadcrumb + Search */}
+      <div className="flex items-center gap-space-lg min-w-0 flex-1">
+        <div className="flex items-center gap-2 text-on-surface-variant font-mono text-[12px] shrink-0">
+          <span className="font-semibold text-secondary">ThreatLens</span>
+          <span className="text-outline-variant">/</span>
+          <span className="text-on-surface font-medium">{title || 'Operational Workspace'}</span>
+        </div>
 
-      {/* Right Controls */}
-      <div className="flex items-center gap-4">
-        {/* Modern SaaS Search Input */}
-        <div className="relative hidden md:block">
-          <Search className="w-3.5 h-3.5 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
+        {/* Indicator Omni-Search */}
+        <div className="relative max-w-md w-full hidden md:block">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-on-surface-variant">
+            <span className="material-symbols-outlined text-[18px]">search</span>
+          </div>
           <input
             type="text"
             placeholder="Search indicator, hash, domain, IP..."
-            className="pl-9 pr-4 py-1.5 bg-background-subtle border border-border rounded-lg text-xs font-mono text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary focus:bg-surface focus:ring-1 focus:ring-primary w-72 transition-all"
+            className="w-full h-9 pl-9 pr-14 bg-surface-container-low/70 border border-outline-variant/30 rounded-lg font-mono text-[12px] text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-secondary focus:bg-surface-container-lowest transition-all"
           />
+          <div className="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
+            <kbd className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-on-surface-variant border border-outline-variant/40">
+              ⌘K
+            </kbd>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Controls */}
+      <div className="flex items-center gap-space-md shrink-0">
+        {/* SOC Engine Status */}
+        <div className="flex items-center gap-2 px-space-sm py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+          <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+          <span className="font-mono text-[10px] font-bold tracking-wide text-emerald-800 uppercase">
+            SOC ENGINE ONLINE
+          </span>
         </div>
 
-        {/* SOC Status Pill */}
-        <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-          <span>SOC ENGINE ONLINE</span>
-        </div>
+        <div className="h-4 w-px bg-outline-variant/30" />
 
-        <button className="p-1.5 text-text-secondary hover:text-text-primary hover:bg-background-subtle rounded-lg transition-colors relative">
-          <Bell className="w-4 h-4" />
-          <span className="w-1.5 h-1.5 rounded-full bg-red-500 absolute top-1 right-1" />
+        {/* Notifications */}
+        <button
+          aria-label="Notifications"
+          className="relative p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+        >
+          <span className="material-symbols-outlined text-[20px]">notifications</span>
+          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-error ring-2 ring-surface-container-lowest" />
         </button>
 
-        <button className="p-1.5 text-text-secondary hover:text-text-primary hover:bg-background-subtle rounded-lg transition-colors">
-          <HelpCircle className="w-4 h-4" />
+        {/* Help */}
+        <button
+          aria-label="Help"
+          className="p-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors"
+        >
+          <span className="material-symbols-outlined text-[20px]">help</span>
         </button>
 
-        {/* Analyst Profile */}
-        <div className="flex items-center gap-2 pl-3 border-l border-border">
-          <div className="w-7 h-7 rounded-full bg-primary-subtle border border-primary-border text-primary flex items-center justify-center font-bold text-xs">
-            SA
+        {/* Analyst Profile + Logout */}
+        <div className="flex items-center gap-space-sm pl-space-xs border-l border-outline-variant/30">
+          <div className="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-xs ring-1 ring-outline-variant/40 uppercase">
+            {username ? username.slice(0, 2) : 'SA'}
           </div>
-          <div className="hidden xl:block text-left text-xs">
-            <div className="font-semibold text-text-primary leading-none">Security Analyst</div>
-            <div className="text-[10px] text-text-muted mt-0.5">Tier 2 Triage</div>
+          <div className="hidden xl:flex flex-col text-left">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[13px] font-semibold text-on-surface leading-none capitalize">
+                {username || 'Security Analyst'}
+              </span>
+              <span className="font-mono text-[10px] px-1 py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-bold leading-none">
+                SA
+              </span>
+            </div>
+            <span className="font-mono text-[10px] text-on-surface-variant leading-tight mt-0.5">Tier 2 Triage</span>
           </div>
+
+          {/* Logout button */}
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              aria-label="Sign out"
+              title="Sign out"
+              className="ml-1 p-1.5 rounded-lg text-on-surface-variant hover:text-error hover:bg-error/10 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">logout</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

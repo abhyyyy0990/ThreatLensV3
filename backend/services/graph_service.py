@@ -1,84 +1,128 @@
-"""Graph Correlation and Campaign Clustering Service."""
+"""Graph Correlation and Campaign Clustering Service.
+
+Bug 8 fix: Previously always returned the same hardcoded demo graph regardless
+of the input parameters (email_addr, domain, urls, ips).  This version builds
+the graph from the actual supplied parameters so different inputs produce
+different, accurate graphs.
+"""
 from __future__ import annotations
 
 from backend.schemas.intelligence import GraphNode, GraphEdge, GraphCorrelationResponse
 
 
 def build_correlation_graph(
-    email_addr: str = "security-update@account-verify.xyz",
-    domain: str = "account-verify.xyz",
-    urls: list[str] = None,
-    ips: list[str] = None
+    email_addr: str = "",
+    domain: str = "",
+    urls: list[str] | None = None,
+    ips: list[str] | None = None
 ) -> GraphCorrelationResponse:
-    """Build a forensic relationship graph mapping entities, infrastructure, and campaign clusters."""
-    urls = urls or ["http://account-verify.xyz/auth/login", "http://login-portal-update.ru/session"]
-    ips = ips or ["185.220.101.5", "91.108.4.12"]
+    """Build a forensic relationship graph from the supplied indicators.
 
-    nodes = []
-    edges = []
+    Args:
+        email_addr: Sender / subject email address.
+        domain:     Primary domain being correlated.
+        urls:       List of URLs to add as nodes.
+        ips:        List of IP addresses to add as nodes.
 
-    # Email Node
-    nodes.append(GraphNode(
-        id="email_target",
-        label=email_addr,
-        type="sender",
-        risk="high",
-        metadata={"domain": domain}
-    ))
+    Returns:
+        GraphCorrelationResponse with nodes, edges, and a summary sentence.
+    """
+    urls = urls or []
+    ips = ips or []
 
-    # Domain Node
-    nodes.append(GraphNode(
-        id="domain_main",
-        label=domain,
-        type="domain",
-        risk="high",
-        metadata={"age_days": 45, "registrar": "NameSilo"}
-    ))
-    edges.append(GraphEdge(source="email_target", target="domain_main", relation="sent-from", label="Sender Domain"))
+    nodes: list[GraphNode] = []
+    edges: list[GraphEdge] = []
 
-    # IP Nodes
+    # ── Sender / email node ──────────────────────────────────────────────────
+    if email_addr:
+        nodes.append(GraphNode(
+            id="email_target",
+            label=email_addr,
+            type="sender",
+            risk="high",
+            metadata={"domain": domain or "unknown"}
+        ))
+
+    # ── Domain node ─────────────────────────────────────────────────────────
+    if domain:
+        nodes.append(GraphNode(
+            id="domain_main",
+            label=domain,
+            type="domain",
+            risk="high",
+            metadata={"source": "supplied_indicator"}
+        ))
+        if email_addr:
+            edges.append(GraphEdge(
+                source="email_target",
+                target="domain_main",
+                relation="sent-from",
+                label="Sender Domain"
+            ))
+
+    # ── IP nodes ─────────────────────────────────────────────────────────────
     for i, ip in enumerate(ips):
         node_id = f"ip_{i}"
+        risk_level = "critical" if ip.startswith("185.") else "high"
         nodes.append(GraphNode(
             id=node_id,
             label=ip,
             type="ip",
-            risk="critical" if "185." in ip else "high",
-            metadata={"geo": "Netherlands", "isp": "HostEurope"}
+            risk=risk_level,
+            metadata={"source": "supplied_indicator"}
         ))
-        edges.append(GraphEdge(source="domain_main", target=node_id, relation="resolves-to", label="DNS A Record"))
+        if domain:
+            edges.append(GraphEdge(
+                source="domain_main",
+                target=node_id,
+                relation="resolves-to",
+                label="DNS A Record"
+            ))
+        elif email_addr:
+            edges.append(GraphEdge(
+                source="email_target",
+                target=node_id,
+                relation="connected-to",
+                label="SMTP Relay"
+            ))
 
-    # ASN Node
-    nodes.append(GraphNode(
-        id="asn_node",
-        label="AS49981 (HostEurope GmbH)",
-        type="asn",
-        risk="high",
-        metadata={"peers": 14}
-    ))
-    edges.append(GraphEdge(source="ip_0", target="asn_node", relation="hosted-on", label="BGP Autonomous System"))
-
-    # URL Nodes
+    # ── URL nodes ─────────────────────────────────────────────────────────────
     for j, u in enumerate(urls):
         url_id = f"url_{j}"
         nodes.append(GraphNode(
             id=url_id,
-            label=u[:32] + "...",
+            label=u[:48] + ("..." if len(u) > 48 else ""),
             type="url",
             risk="critical",
             metadata={"full_url": u}
         ))
-        edges.append(GraphEdge(source="domain_main", target=url_id, relation="hosts-link", label="Embedded URL"))
+        if domain:
+            edges.append(GraphEdge(
+                source="domain_main",
+                target=url_id,
+                relation="hosts-link",
+                label="Embedded URL"
+            ))
+        elif email_addr:
+            edges.append(GraphEdge(
+                source="email_target",
+                target=url_id,
+                relation="contains-link",
+                label="Embedded URL"
+            ))
 
-    # Campaign Cluster Node
-    nodes.append(GraphNode(
-        id="campaign_001",
-        label="Campaign #CAMP-2026-FIN-09",
-        type="campaign",
-        risk="critical",
-        metadata={"confidence": "94%", "cluster_size": 18, "target": "Banking & Fintech"}
-    ))
-    edges.append(GraphEdge(source="domain_main", target="campaign_001", relation="member-of", label="Shared Infrastructure"))
+    # ── Empty input guard ────────────────────────────────────────────────────
+    if not nodes:
+        nodes.append(GraphNode(
+            id="placeholder",
+            label="No indicators supplied",
+            type="domain",
+            risk="low",
+            metadata={}
+        ))
 
-    summary = f"Correlation network mapped {len(nodes)} interconnected entities across shared infrastructure AS49981 and Campaign #CAMP-2026-FIN-09."
+    summary = (
+        f"Correlation network mapped {len(nodes)} interconnected indicator entities "
+        f"({len(ips)} IPs, {len(urls)} URLs) across the submitted investigation scope."
+    )
     return GraphCorrelationResponse(nodes=nodes, edges=edges, summary=summary)

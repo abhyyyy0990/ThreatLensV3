@@ -134,9 +134,12 @@ def analyze_email_authentication(headers: dict[str, str], from_domain: str) -> l
         dkim_details = "Signature failed validation or body hash mismatch."
         dkim_expl = "Content was modified in transit or signed with invalid key."
     elif dkim_header:
-        dkim_status = "PASS"
-        dkim_details = "DKIM-Signature header present."
-        dkim_expl = "Digital signature attached by sending MTA."
+        # Bug 3 fix: presence of DKIM-Signature header ≠ valid signature.
+        # Without authentication-results confirming pass/fail we can only say
+        # the header exists but we cannot verify it.
+        dkim_status = "UNVERIFIED"
+        dkim_details = "DKIM-Signature header present but not verified by gateway."
+        dkim_expl = "Signature cannot be validated without Authentication-Results confirmation."
 
     auth_results.append(AuthResult(protocol="DKIM", status=dkim_status, details=dkim_details, explanation=dkim_expl))
 

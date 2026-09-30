@@ -47,24 +47,44 @@ async def scan_qr_endpoint(
     payload: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None)
 ):
-    """Analyze a QR code matrix or decoded payload."""
-    detected_payload = payload
-    if file:
-        detected_payload = payload or f"https://qr-payload-{file.filename}.verify-login.xyz"
-    return analyze_qr_code(detected_payload)
+    """Analyze a QR code matrix or decoded payload.
+
+    Bug 1 fix: previously fabricated a malicious-looking URL from the filename
+    when no payload was decoded. Now we only analyze an explicitly supplied
+    payload; if none is provided the request is rejected with a 422.
+    """
+    if not payload and not file:
+        raise HTTPException(
+            status_code=422,
+            detail="No QR payload provided. Supply a decoded URL string via 'payload' or an image file via 'file'."
+        )
+    # If a file was uploaded but no payload decoded yet, return a clear indication
+    if file and not payload:
+        raise HTTPException(
+            status_code=422,
+            detail="QR code image received but no payload could be decoded. "
+                   "Ensure the image contains a readable QR matrix and pass the decoded text as 'payload'."
+        )
+    return analyze_qr_code(payload)
 
 
-@router.post("/screenshot")
+@router.post("/screenshot", response_model=ThreatResult)
 async def scan_screenshot_endpoint(
     ocr_text: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None)
 ):
-    """Analyze screenshot or message OCR text."""
-    detected_text = ocr_text or (
-        "URGENT: Your account has been suspended due to suspicious activity. "
-        "Click here immediately to verify your credentials: https://security-login-update.net/auth"
-    )
-    return analyze_screenshot_text(detected_text)
+    """Analyze screenshot or message OCR text.
+
+    Bug 2 fix: previously substituted hardcoded phishing text when no OCR was
+    provided, producing a fake result. Now we require actual OCR text or reject.
+    """
+    if not ocr_text:
+        raise HTTPException(
+            status_code=422,
+            detail="No OCR text provided. Supply extracted text via 'ocr_text' field."
+        )
+    return analyze_screenshot_text(ocr_text)
+
 
 
 @router.post("/batch", response_model=BatchScanResult)

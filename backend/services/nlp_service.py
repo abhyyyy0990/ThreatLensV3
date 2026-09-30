@@ -95,29 +95,34 @@ def analyze_email_nlp(subject: str, body: str) -> list[NlpSignal]:
             details="No payment diversion or financial fraud patterns detected."
         ))
 
-    # 4. Executive / Authority Impersonation
+    # 4. Executive / Authority Impersonation — Bug 7 fix: always emit the signal
     imp_hits = []
     for p in _IMPERSONATION_PATTERNS:
         imp_hits.extend(re.findall(p, text, re.IGNORECASE))
-    
-    if imp_hits:
-        signals.append(NlpSignal(
-            category="Executive Impersonation",
-            detected=True,
-            confidence="Medium",
-            details=f"Authority keywords or confidential task solicitation found: {', '.join(list(set(imp_hits))[:3])}."
-        ))
 
-    # 5. Fear & Threat Language
+    signals.append(NlpSignal(
+        category="Executive Impersonation",
+        detected=bool(imp_hits),
+        confidence="Medium",
+        details=(
+            f"Authority keywords or confidential task solicitation found: {', '.join(list(set(imp_hits))[:3])}."
+            if imp_hits else "No executive impersonation or authority manipulation patterns detected."
+        )
+    ))
+
+    # 5. Fear & Threat Language — Bug 7 fix: always emit the signal
     fear_hits = []
     for p in _FEAR_THREAT_PATTERNS:
         fear_hits.extend(re.findall(p, text, re.IGNORECASE))
-    if fear_hits:
-        signals.append(NlpSignal(
-            category="Legal / Fear Tactics",
-            detected=True,
-            confidence="High",
-            details=f"Intimidation or legal threat language detected: {', '.join(list(set(fear_hits))[:3])}."
-        ))
+
+    signals.append(NlpSignal(
+        category="Legal / Fear Tactics",
+        detected=bool(fear_hits),
+        confidence="High",
+        details=(
+            f"Intimidation or legal threat language detected: {', '.join(list(set(fear_hits))[:3])}."
+            if fear_hits else "No fear-inducing or legal threat language detected."
+        )
+    ))
 
     return signals

@@ -5,6 +5,13 @@ import os
 from pathlib import Path
 from pydantic import BaseModel
 
+# Load .env so API keys are available via os.getenv() throughout the app
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
+except ImportError:
+    pass  # python-dotenv not installed — rely on shell environment
+
 ROOT_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT_DIR / "data"
 MODELS_DIR = ROOT_DIR / "models"

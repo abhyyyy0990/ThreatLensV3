@@ -61,10 +61,16 @@ def _risk_to_confidence(prob: float, threshold: float) -> str:
 
 
 def _verdict_from_prob(prob: float, threshold: float) -> str:
-    """Map calibrated probability to human verdict."""
+    """Map calibrated probability to human verdict.
+
+    Bug 5 fix: the suspicious zone was threshold*0.6 which at threshold=0.39
+    gives a lower bound of 0.234 — too wide, causing obvious phishing URLs
+    that score ~0.28 to be called Safe.  Tighten the zone to the 15 percentage
+    points below threshold so only borderline cases read Suspicious.
+    """
     if prob >= threshold:
         return "Malicious"
-    if prob >= threshold * 0.6:  # in the cautionary zone below threshold
+    if prob >= max(threshold - 0.15, 0.0):  # narrower cautionary zone
         return "Suspicious"
     return "Safe"
 

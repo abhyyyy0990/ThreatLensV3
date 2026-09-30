@@ -19,7 +19,40 @@ const api = axios.create({
   },
 });
 
+// Attach stored JWT to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('tl_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// On 401, clear token — App will redirect to login
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('tl_token');
+      localStorage.removeItem('tl_user');
+      window.dispatchEvent(new Event('tl:logout'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const apiClient = {
+  // Auth
+  login: async (username: string, password: string): Promise<{ access_token: string; username: string }> => {
+    const res = await api.post('/auth/login', { username, password });
+    return res.data;
+  },
+
+  getMe: async (): Promise<{ username: string; role: string }> => {
+    const res = await api.get('/auth/me');
+    return res.data;
+  },
+
   // Scans
   scanUrl: async (url: string, saveHistory = true): Promise<ThreatResult> => {
     const res = await api.post('/scan/url', { url, save_history: saveHistory });
@@ -94,6 +127,11 @@ export const apiClient = {
     const res = await api.get(`/intelligence/threat-feed`, {
       params: { indicator, indicator_type: type },
     });
+    return res.data;
+  },
+
+  getFeedsStatus: async (): Promise<{ feeds: { name: string; status: string; live: boolean; has_key: boolean }[] }> => {
+    const res = await api.get('/intelligence/feeds/status');
     return res.data;
   },
 
