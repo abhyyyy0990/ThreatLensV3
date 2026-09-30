@@ -1,34 +1,63 @@
+# ── Secrets ────────────────────────────────────────────────────────────────────
 .env
 .env.*
 !.env.example
 
+# ── Python ─────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
+*.pyc
 .venv/
 venv/
 .pytest_cache/
 .mypy_cache/
 
-*.db
-*.sqlite
-*.sqlite3
-
-.streamlit/secrets.toml
-
-.DS_Store
-.vscode/
-.idea/
-
-data/raw/*
-data/processed/*
-data/splits/*
-models/production/*
-models/registry/*
-reports/generated/*
-
-# Large ML model binaries (exceed GitHub 100MB limit)
+# ── Large ML model binaries (exceed GitHub 100 MB limit) ───────────────────────
 **/*.joblib
 **/*.pkl
 **/*.h5
 **/*.bin
 **/*.onnx
+
+# ── Training & processed data (large CSVs, not needed to run the app) ──────────
+data/raw/*.csv
+data/processed/*.csv
+data/splits/train.csv
+data/splits/validation.csv
+data/splits/test.csv
+
+# ── Local databases (may contain user / scan history) ──────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Frontend build artefact (Render rebuilds this on deploy) ───────────────────
+frontend/dist/
+frontend/node_modules/
+
+# ── macOS junk ─────────────────────────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+
+# ── Editor / IDE ───────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ── Logs ───────────────────────────────────────────────────────────────────────
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Reports generated at runtime ───────────────────────────────────────────────
+reports/generated/*
+
+# ── Miscellaneous build artefacts ──────────────────────────────────────────────
+*.zip
+dist-ssr/
