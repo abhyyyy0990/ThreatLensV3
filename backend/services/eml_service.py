@@ -13,6 +13,30 @@ _URL_REGEX = re.compile(
     re.IGNORECASE
 )
 
+# Extracts <a href="...">visible text</a> from HTML
+_ANCHOR_REGEX = re.compile(
+    r'<a\b[^>]*\bhref=["\']([^"\']+)["\'][^>]*>(.*?)</a>',
+    re.IGNORECASE | re.DOTALL
+)
+
+# Macro-enabled and double-extension dangerous file types
+_DANGEROUS_EXTENSIONS = (
+    '.exe', '.bat', '.vbs', '.js', '.scr', '.ps1', '.iso',
+    '.zip', '.rar', '.7z',                         # archives
+    '.docm', '.xlsm', '.pptm', '.dotm', '.xlam',  # macro-enabled Office
+    '.hta', '.wsf', '.lnk', '.jar',               # script / link launchers
+)
+
+def _is_double_extension(filename: str) -> bool:
+    """Detect double-extension tricks like 'invoice.pdf.exe'."""
+    parts = filename.lower().split(".")
+    if len(parts) >= 3:
+        # If second-to-last looks benign but last is dangerous
+        benign = {".pdf", ".doc", ".xls", ".ppt", ".txt", ".jpg", ".png"}
+        if f".{parts[-2]}" in benign and f".{parts[-1]}" in {e.lstrip('.') for e in _DANGEROUS_EXTENSIONS}:
+            return True
+    return False
+
 
 class ParsedEmailData:
     def __init__(self):
@@ -31,7 +55,9 @@ class ParsedEmailData:
         self.body_plain: str = ""
         self.body_html: str = ""
         self.extracted_urls: list[str] = []
+        self.misleading_links: list[dict[str, str]] = []  # {display_text, actual_href}
         self.attachments: list[dict[str, Any]] = []
+
 
 
 def parse_email_bytes_or_text(content: bytes | str) -> ParsedEmailData:
@@ -78,11 +104,16 @@ def parse_email_bytes_or_text(content: bytes | str) -> ParsedEmailData:
                 filename = part.get_filename() or "unnamed_attachment"
                 payload = part.get_payload(decode=True)
                 size_bytes = len(payload) if payload else 0
+                fname_lower = filename.lower()
+                is_exec = fname_lower.endswith(_DANGEROUS_EXTENSIONS)
+                is_double_ext = _is_double_extension(filename)
                 parsed.attachments.append({
                     "filename": filename,
                     "content_type": content_type,
                     "size_bytes": size_bytes,
-                    "is_executable": filename.lower().endswith(('.exe', '.bat', '.vbs', '.js', '.scr', '.ps1', '.iso', '.zip', '.rar')),
+                    "is_executable": is_exec or is_double_ext,
+                    "double_extension": is_double_ext,
+                    "macro_enabled": fname_lower.endswith(('.docm', '.xlsm', '.pptm', '.dotm', '.xlam')),
                 })
             else:
                 try:
@@ -124,4 +155,25 @@ def parse_email_bytes_or_text(content: bytes | str) -> ParsedEmailData:
             seen.add(clean_u)
             parsed.extracted_urls.append(clean_u)
 
+
+    # -- Misleading link text detection ---
+    if parsed.body_html:
+        def _dom(url):
+            import re as _re
+            m = _re.search(r"https?://([^/\s?#]+)", url, _re.IGNORECASE)
+            return m.group(1).lower() if m else ""
+        for match in _ANCHOR_REGEX.finditer(parsed.body_html):
+            actual_href = match.group(1).strip()
+            import re as _re2
+            raw_display = _re2.sub(r"<[^>]+>", "", match.group(2)).strip()
+            if _re2.search(r"(?:https?://|www\.)\S+", raw_display, _re2.IGNORECASE):
+                href_domain = _dom(actual_href)
+                text_domain = _dom(raw_display)
+                if href_domain and text_domain and href_domain != text_domain:
+                    parsed.misleading_links.append({
+                        "display_text": raw_display[:120],
+                        "actual_href": actual_href[:200],
+                        "href_domain": href_domain,
+                        "text_domain": text_domain,
+                    })
     return parsed

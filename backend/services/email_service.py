@@ -56,6 +56,16 @@ def analyze_email_content(content: str | bytes, save_history: bool = True) -> Em
     for att in parsed.attachments:
         if att.get("is_executable"):
             suspicious_flags.append(f"Dangerous executable attachment detected: {att['filename']}")
+        if att.get("macro_enabled"):
+            suspicious_flags.append(f"Macro-enabled Office attachment (VBA risk): {att['filename']}")
+        if att.get("double_extension"):
+            suspicious_flags.append(f"Double-extension trick detected: {att['filename']}")
+
+    # 7. Misleading Link Text (href ≠ visible text domain)
+    for ml in parsed.misleading_links:
+        suspicious_flags.append(
+            f"Misleading link: displays '{ml['text_domain']}' but href points to '{ml['href_domain']}'"
+        )
 
     # 7. Unified Risk Engine & Verdict Calculation
     # Calculate score based on: URL scores, Auth failures, Header spoofing, NLP signals, Attachments
@@ -76,8 +86,9 @@ def analyze_email_content(content: str | bytes, save_history: bool = True) -> Em
     header_penalty = min(len(header_forensics["anomalies"]) * 15, 40)
     nlp_penalty = sum(15 for s in nlp_signals if s.detected)
     att_penalty = sum(35 for a in parsed.attachments if a.get("is_executable"))
+    link_penalty = min(len(parsed.misleading_links) * 20, 40)  # 20 pts each, max 40
 
-    computed_risk = max(base_url_score, min(100, int(base_url_score * 0.5 + auth_penalty + header_penalty + nlp_penalty + att_penalty)))
+    computed_risk = max(base_url_score, min(100, int(base_url_score * 0.5 + auth_penalty + header_penalty + nlp_penalty + att_penalty + link_penalty)))
 
     
     # Verdict mapping
