@@ -67,7 +67,10 @@ def analyze_email_content(content: str | bytes, save_history: bool = True) -> Em
             auth_penalty += 25
         elif a.status == "SOFTFAIL":
             auth_penalty += 15
-    auth_penalty = min(auth_penalty, 75)  # Bug 6 fix: cap auth penalty
+        elif a.status == "UNVERIFIED":
+            # Missing auth header = no proof sender is legitimate
+            auth_penalty += 12
+    auth_penalty = min(auth_penalty, 75)  # cap total auth penalty
 
     # Bug 6 fix: cap header_penalty — each anomaly adds 15 pts, max 40 total
     header_penalty = min(len(header_forensics["anomalies"]) * 15, 40)

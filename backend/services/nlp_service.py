@@ -10,6 +10,18 @@ _URGENCY_PATTERNS = [
     r"\b(?:final notice|last chance|deactivation|unauthorized access|security alert|take action)\b"
 ]
 
+# Prize / Lottery / Advance-Fee Fraud (419 scam) patterns
+_PRIZE_LOTTERY_PATTERNS = [
+    r"\b(?:you(?:'ve| have) won|you(?:'ve| have) been selected as (?:a |the )?winner|congratulations.*(?:won|winner|prize|award))\b",
+    r"\b(?:lottery|jackpot|prize money|prize winner|sweepstakes|lucky draw|lotto|raffle)\b",
+    r"\b(?:claim your (?:prize|reward|winnings?|funds?|money)|collect your (?:prize|reward|winnings?))\b",
+    r"\b(?:inheritance|next of kin|beneficiary|estate of the late|deceased|unclaimed funds)\b",
+    r"\b(?:advance fee|processing fee|transfer fee|administrative fee|delivery fee)\b",
+    r"\b(?:diplomat|consignment|secret shopper|mystery shopper|foreign transfer)\b",
+    r"[₹\$€£]\s*[\d,]{4,}",             # Currency amounts: ₹25,00,000 / $500,000
+    r"\b\d{1,3}(?:,\d{2,3}){1,}\s*(?:lakh|crore|million|billion|rupees?|dollars?)\b",
+]
+
 _CREDENTIAL_PATTERNS = [
     r"\b(?:verify your (?:account|identity|password|credentials)|confirm your password|log ?in to your|sign ?in to|update your (?:security|profile|login)|reset your password|enter your credentials)\b",
     r"\b(?:click here to (?:login|verify|unlock)|authenticate|validate your account)\b"
@@ -34,6 +46,26 @@ def analyze_email_nlp(subject: str, body: str) -> list[NlpSignal]:
     """Analyze subject and body text for social engineering and attack vector patterns."""
     text = f"{subject}\n{body}".lower()
     signals = []
+
+    # 0. Prize / Lottery / Advance-Fee Scam — check first, distinct high-signal category
+    prize_hits = []
+    for p in _PRIZE_LOTTERY_PATTERNS:
+        prize_hits.extend(re.findall(p, text, re.IGNORECASE))
+
+    if prize_hits:
+        signals.append(NlpSignal(
+            category="Prize / Lottery Scam",
+            detected=True,
+            confidence="High" if len(prize_hits) >= 2 else "Medium",
+            details=f"Prize, lottery, or advance-fee fraud indicators detected: {', '.join(list(set(prize_hits))[:4])}."
+        ))
+    else:
+        signals.append(NlpSignal(
+            category="Prize / Lottery Scam",
+            detected=False,
+            confidence="High",
+            details="No prize, lottery, or advance-fee fraud language detected."
+        ))
 
     # 1. Urgency / Coercion
     urgency_hits = []
