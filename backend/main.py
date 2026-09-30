@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from fastapi import FastAPI, Request, Depends
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -14,7 +14,6 @@ if str(ROOT_DIR) not in sys.path:
 
 from backend.config import settings
 from backend.routes import scan, intelligence, correlation, cases, history, model, auth
-from backend.dependencies.auth import get_current_user
 
 app = FastAPI(
     title=settings.app_name,
@@ -34,17 +33,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ── Public routes (no auth required) ────────────────────────────────────────
-app.include_router(auth.router, prefix="/api")
-
-# ── Protected routes (Bearer JWT required) ───────────────────────────────────
-_auth = Depends(get_current_user)
-app.include_router(scan.router,          prefix="/api", dependencies=[_auth])
-app.include_router(intelligence.router,  prefix="/api", dependencies=[_auth])
-app.include_router(correlation.router,   prefix="/api", dependencies=[_auth])
-app.include_router(cases.router,         prefix="/api", dependencies=[_auth])
-app.include_router(history.router,       prefix="/api", dependencies=[_auth])
-app.include_router(model.router,         prefix="/api", dependencies=[_auth])
+# ── Public routes ────────────────────────────────────────────────────────────
+app.include_router(auth.router,          prefix="/api")
+app.include_router(scan.router,          prefix="/api")
+app.include_router(intelligence.router,  prefix="/api")
+app.include_router(correlation.router,   prefix="/api")
+app.include_router(cases.router,         prefix="/api")
+app.include_router(history.router,       prefix="/api")
+app.include_router(model.router,         prefix="/api")
 
 
 @app.get("/api/health")
