@@ -12,3 +12,4 @@ python-dotenv
 pytest>=7.0
 tldextract
 xgboost
+python-jose[cryptography]>=3.3.0
