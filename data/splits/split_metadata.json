@@ -1,0 +1,18 @@
+{
+  "dataset_version": "v001",
+  "random_seed": 42,
+  "splitting_strategy": "domain_grouped",
+  "description": "All URLs from the same registered domain land in exactly one split. Prevents domain-level leakage between train and test. Uses GroupShuffleSplit from scikit-learn.",
+  "split_fractions_target": {
+    "train": 0.7,
+    "validation": 0.15,
+    "test": 0.15
+  },
+  "binary_label_map": {
+    "benign": 0,
+    "defacement": 1,
+    "phishing": 1,
+    "malware": 1
+  },
+  "locked_test_rule": "The test split must NEVER be used for feature selection, hyperparameter tuning, threshold tuning, calibration, or model selection."
+}
